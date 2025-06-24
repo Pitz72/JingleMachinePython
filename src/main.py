@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import (
     QHBoxLayout, QDialogButtonBox, QDoubleSpinBox
 )
 from PyQt6.QtGui import QColor, QAction, QPainter, QBrush, QPen
-from PyQt6.QtCore import Qt, QTimer, QRectF
+from PyQt6.QtCore import Qt, QTimer, QRectF, pyqtSignal
 import pygame
 import json
 import os
@@ -107,6 +107,8 @@ class ButtonSettingsDialog(QDialog):
         }
 
 class JingleButton(QPushButton):
+    playback_finished = pyqtSignal(object) # Segnale che emette se stesso
+
     def __init__(self, text="", parent=None):
         super().__init__(text, parent)
         self.audio_file = None
@@ -119,8 +121,11 @@ class JingleButton(QPushButton):
         self.color = self.original_color
         self.is_playing_visual_indicator = False
         self.is_paused = False
+        self.is_overlay_effect = False
+        self.is_queued = False
         self._update_style()
-        self.clicked.connect(self.play_audio)
+        # Rimozione della connessione diretta: ora gestita da JingleMachine
+        # self.clicked.connect(self.play_audio)
         self.current_sound_channel = None
         self.audio_duration = 0 # Durata totale dell'audio in secondi
         self.progress_ratio = 0 # Per la progress bar (0.0 a 1.0)
@@ -131,6 +136,9 @@ class JingleButton(QPushButton):
         self.playback_check_timer = QTimer(self)
         self.playback_check_timer.timeout.connect(self._check_playback_status)
         self.playback_check_timer.setInterval(50) # Intervallo più frequente per progress bar fluida
+        
+        # Contatore per rallentare il lampeggio della coda (ogni ~800ms invece di 50ms)
+        self._queue_flash_counter = 0
         self.update_tooltip()
 
     def paintEvent(self, event):
@@ -170,10 +178,9 @@ class JingleButton(QPushButton):
             painter.drawRect(bar_margin_horizontal, rect_y, active_bar_width, bar_height)
 
     def _update_style(self):
-        border_color_str = "#FFFF00" # Giallo per "sta per finire"
-        current_border_color = QColor(self.styleSheet().split("border: 2px solid ")[1].split(";")[0] if "border: 2px solid " in self.styleSheet() else "#555")
-        
         is_ending_soon = self.is_playing_visual_indicator and not self.is_paused and self.audio_duration > 0 and (1.0 - self.progress_ratio) < 0.15 and (1.0 - self.progress_ratio) > 0.01 # es. ultimi 15%
+        
+        border_color = QColor("#555") # Colore di default
         
         if is_ending_soon:
             # Lampeggio semplice alternando il colore del bordo
@@ -185,10 +192,16 @@ class JingleButton(QPushButton):
             else:
                  border_color = QColor("#FFFF00") # Giallo
                  self._flash_state = True
+        elif self.is_queued: # NUOVA CONDIZIONE
+            # Lampeggio blu/ciano per indicare che è in coda
+            if hasattr(self, '_flash_state_queued') and self._flash_state_queued:
+                border_color = QColor("#00FFFF") # Ciano
+                self._flash_state_queued = False
+            else:
+                border_color = QColor("#007BFF") # Blu
+                self._flash_state_queued = True
         elif self.is_playing_visual_indicator and not self.is_paused:
             border_color = QColor("#00FF00") # Verde per in riproduzione
-        else:
-            border_color = QColor("#555") # Default
         
         border_color_hex = border_color.name()
 
@@ -206,7 +219,9 @@ class JingleButton(QPushButton):
                 background-color: {self._darker_color(self.color)};
             }}
         """)
-        if is_ending_soon or (self.is_playing_visual_indicator and not self.is_paused): # Forza ridisegno per progress bar o lampeggio
+        
+        # Aggiungi self.is_queued alla condizione per forzare il ridisegno
+        if is_ending_soon or self.is_queued or (self.is_playing_visual_indicator and not self.is_paused):
             self.update() 
 
     def _lighter_color(self, hex_color, factor=0.2):
@@ -224,6 +239,16 @@ class JingleButton(QPushButton):
     def _check_playback_status(self):
         # DEBUG PRINT RIMOSSO
         # print(f"_check_playback_status for: {self.text()} - Timer Active: {self.playback_check_timer.isActive()}")
+        
+        # Se il pulsante è in coda, deve sempre lampeggiare (ma lentamente)
+        if self.is_queued:
+            self._queue_flash_counter += 1
+            # Lampeggia ogni 16 cicli (16 * 50ms = 800ms)
+            if self._queue_flash_counter >= 16:
+                self._queue_flash_counter = 0
+                self._update_style() # Forza aggiornamento per lampeggio
+            return
+        
         if self.current_sound_channel and self.current_sound_channel.get_sound() and self.current_sound_channel.get_busy():
             # DEBUG PRINT RIMOSSO
             # print(f"  Sound Busy for {self.text()}. Paused: {self.is_paused}, Loop: {self.loop}, Duration: {self.audio_duration}")
@@ -252,14 +277,38 @@ class JingleButton(QPushButton):
                      self.is_playing_visual_indicator = False 
 
         else: 
+            # Se prima era in riproduzione e ora non lo è più, significa che è appena terminato.
+            was_playing = self.is_playing_visual_indicator
             if self.is_playing_visual_indicator or self.progress_ratio > 0: 
                 self.is_playing_visual_indicator = False
                 self.progress_ratio = 0
             if self.playback_check_timer.isActive():
                  self.playback_check_timer.stop()
+            
+            # EMETTI IL SEGNALE
+            # Emettiamo il segnale solo se era effettivamente in riproduzione,
+            # per non emetterlo per pulsanti che non stavano facendo nulla.
+            if was_playing:
+    
+                self.playback_finished.emit(self)
         
         self._update_style() 
         self.update_tooltip()
+
+    def stop_audio(self):
+        """Ferma la riproduzione del suono di questo pulsante, se attivo."""
+        if self.current_sound_channel and self.current_sound_channel.get_busy():
+            self.current_sound_channel.stop()
+            # Aggiungiamo un reset completo dello stato visivo
+            self.is_playing_visual_indicator = False
+            self.is_paused = False
+            self.is_queued = False # Assicuriamoci che anche lo stato di coda sia resettato
+            self.progress_ratio = 0
+            if self.playback_check_timer.isActive():
+                self.playback_check_timer.stop()
+            self._update_style()
+            self.update_tooltip()
+    
 
     def update_tooltip(self):
         tooltip_parts = []
@@ -267,11 +316,13 @@ class JingleButton(QPushButton):
             tooltip_parts.append(f"Nome: {self.custom_name}")
         if self.audio_file:
             tooltip_parts.append(f"File: {os.path.basename(self.audio_file)}")
-            if self.current_sound_channel and self.current_sound_channel.get_sound() and self.current_sound_channel.get_busy():
+            if self.is_queued:
+                status = "In Coda"
+            elif self.current_sound_channel and self.current_sound_channel.get_sound() and self.current_sound_channel.get_busy():
                 status = "In Pausa" if self.is_paused else "In Riproduzione"
-                tooltip_parts.append(f"Stato: {status}")
             else:
-                tooltip_parts.append("Stato: Pronto")
+                status = "Pronto"
+            tooltip_parts.append(f"Stato: {status}")
         else:
             tooltip_parts.append("Vuoto")
 
@@ -490,6 +541,7 @@ class JingleButton(QPushButton):
         self.continue_playback = False
         self.play_from_start = True
         self.is_paused = False
+        self.is_queued = False
         self.current_sound_channel = None
         self.volume = 1.0
         self.color = self.original_color = "#3E3E3E"
@@ -557,6 +609,7 @@ class JingleButton(QPushButton):
         self.current_sound_channel = None
         self.is_paused = False
         self.is_playing_visual_indicator = False
+        self.is_queued = False
         self.progress_ratio = 0
         self.playback_start_time_ms = 0 # Reset anche qui
         self.paused_at_ms = 0 # Reset anche qui
@@ -567,11 +620,15 @@ class JingleButton(QPushButton):
 class JingleMachine(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("RUNTIME RADIO")
+        self.setWindowTitle("RUNTIME RADIO v1.5")
         self.setGeometry(100, 100, 1700, 550) 
 
         pygame.mixer.init()
         pygame.mixer.set_num_channels(128)
+
+        # Proprietà per la gestione centralizzata della riproduzione
+        self.active_main_track_button = None
+        self.queued_main_track_button = None
 
         self.main_layout = QVBoxLayout() # Layout verticale principale
         self.central_widget = QWidget()
@@ -596,12 +653,147 @@ class JingleMachine(QMainWindow):
                 button = JingleButton(parent=self.grid_widget) # Imposta il parent corretto
                 button.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
                 button.setFixedSize(200, 35)
+                # Connessione centralizzata: invece di button.play_audio, usa handle_button_press
+                button.clicked.connect(lambda checked, b=button: self.handle_button_press(b))
+                # Connessione per la riproduzione automatica dalla coda
+                button.playback_finished.connect(self.on_playback_finished)
+                
+                # Logica per identificare la colonna degli effetti (ultima colonna)
+                if col == 7:
+                    button.is_overlay_effect = True
+                    # Applica un colore di base leggermente diverso per riconoscere la colonna
+                    button.original_color = "#4a4a4a" 
+                    button.color = button.original_color
+                    button._update_style()
+                
                 self.grid_layout.addWidget(button, row, col)
                 row_buttons.append(button)
             self.buttons.append(row_buttons)
 
         self.setStyleSheet("QMainWindow { background-color: #2E2E2E; } QWidget { background-color: #2E2E2E; }")
         self.load_config()
+
+    def on_playback_finished(self, finished_button):
+        """Questo slot viene chiamato quando un JingleButton finisce di suonare."""
+
+
+        # Verifica che il pulsante terminato fosse effettivamente la traccia attiva.
+        # Questo previene che un effetto sovrapposto attivi la coda per errore.
+        if self.active_main_track_button is not finished_button:
+            return
+
+        self.active_main_track_button = None # La traccia attiva non c'è più.
+
+        # Se c'è un pulsante in coda, avvialo.
+        queued_button = self.queued_main_track_button
+        if queued_button:
+
+            self.queued_main_track_button = None # Rimuovilo dalla coda
+            queued_button.is_queued = False
+            
+            # Ora gestisci la sua pressione come se l'utente l'avesse appena cliccato
+            self.handle_button_press(queued_button)
+
+    def handle_button_press(self, button):
+        if button.is_overlay_effect:
+            # Logica per gli effetti sonori: suonano sempre e comunque.
+
+            button.play_audio()
+            return # Fine, non interagisce con la logica delle tracce principali
+
+        # --- Logica per le tracce principali (colonne 0-6) ---
+
+
+        active_button = self.active_main_track_button
+        queued_button = self.queued_main_track_button
+        
+        # Caso 1: Il pulsante premuto è già quello attivo.
+        if button is active_button:
+            button.play_audio()
+            if not button.current_sound_channel.get_busy():
+                self.active_main_track_button = None # Si è fermato, non è più attivo
+            return
+
+        # Caso 2: Il pulsante premuto è già in coda.
+        if button is queued_button:
+            # L'utente lo preme di nuovo: lo rimuove dalla coda.
+            button.is_queued = False
+            button._queue_flash_counter = 0  # Reset contatore lampeggio
+            button._update_style()
+            button.update_tooltip()
+            # Ferma il timer se non c'è riproduzione attiva
+            if not (button.current_sound_channel and button.current_sound_channel.get_busy()):
+                if button.playback_check_timer.isActive():
+                    button.playback_check_timer.stop()
+            self.queued_main_track_button = None
+            
+            return
+
+        # Caso 3: Viene premuto un nuovo pulsante.
+
+        # Se non c'è una traccia attiva, questo diventa la traccia attiva.
+        if not active_button or not active_button.current_sound_channel.get_busy():
+            button.play_audio()
+            self.active_main_track_button = button
+            return
+
+        # Se c'è una traccia attiva...
+
+        # REGOLA 2a: Priorità Non-Loop su Loop
+        if not button.loop and active_button.loop:
+            active_button.stop_audio()
+            # Pulisce la coda se c'era qualcosa in attesa per il loop
+            if queued_button:
+                queued_button.is_queued = False
+                queued_button._queue_flash_counter = 0  # Reset contatore lampeggio
+                queued_button._update_style()
+                # Ferma il timer se non ha audio attivo
+                if not (queued_button.current_sound_channel and queued_button.current_sound_channel.get_busy()):
+                    if queued_button.playback_check_timer.isActive():
+                        queued_button.playback_check_timer.stop()
+                self.queued_main_track_button = None
+            button.play_audio()
+            self.active_main_track_button = button
+            return
+
+        # REGOLA 2b: Accodamento
+        # Se sia la traccia attiva che quella premuta sono non-loop, metti in coda.
+        if not active_button.loop and not button.loop:
+            
+            # Se c'era già un brano in coda, toglilo prima di aggiungere il nuovo.
+            if queued_button:
+                queued_button.is_queued = False
+                queued_button._queue_flash_counter = 0  # Reset contatore lampeggio
+                queued_button._update_style()
+                # Ferma il timer del vecchio pulsante in coda se non ha audio attivo
+                if not (queued_button.current_sound_channel and queued_button.current_sound_channel.get_busy()):
+                    if queued_button.playback_check_timer.isActive():
+                        queued_button.playback_check_timer.stop()
+            
+            self.queued_main_track_button = button
+            button.is_queued = True
+            button._queue_flash_counter = 0  # Reset contatore per iniziare lampeggio
+            button._update_style()
+            button.update_tooltip()
+            # Avvia il timer per il lampeggio se non è già attivo
+            if not button.playback_check_timer.isActive():
+                button.playback_check_timer.start()
+            return
+            
+        # Caso di fallback: se si preme un loop mentre un non-loop è attivo,
+        # o un loop mentre un altro loop è attivo. In entrambi i casi, ferma il vecchio e avvia il nuovo.
+        active_button.stop_audio()
+        if queued_button: # Pulisci la coda
+            queued_button.is_queued = False
+            queued_button._queue_flash_counter = 0  # Reset contatore lampeggio
+            queued_button._update_style()
+            # Ferma il timer se non ha audio attivo
+            if not (queued_button.current_sound_channel and queued_button.current_sound_channel.get_busy()):
+                if queued_button.playback_check_timer.isActive():
+                    queued_button.playback_check_timer.stop()
+            self.queued_main_track_button = None
+        button.play_audio()
+        self.active_main_track_button = button
 
     def stop_all_sounds(self):
         stopped_any = False
@@ -620,7 +812,7 @@ class JingleMachine(QMainWindow):
                         button.update() # Forza ridisegno per pulire la progress bar
                     except pygame.error as e:
                         # Manteniamo un log per il debug, ma nessun QMessageBox qui per non essere invasivi
-                        print(f"DEBUG: Errore fermando il suono per {button.text()} durante STOP ALL: {e}") 
+                        pass
         # Rimosso QMessageBox da qui
         # if stopped_any:
         #     QMessageBox.information(self, "Audio Fermato", "Tutti i suoni in riproduzione sono stati fermati.")

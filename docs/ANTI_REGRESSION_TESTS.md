@@ -101,5 +101,14 @@ Questo documento elenca i test da eseguire per verificare che le funzionalità p
 4. Verificare applicazione modifiche.
 5. Riaprire, modificare, cliccare Annulla. | Dialogo si apre con valori corretti. Modifiche con OK applicate e persistono. Modifiche con Annulla scartate, stato precedente mantenuto. | Pass/Fail |
 
+### 5. Regole di Riproduzione Avanzate
+
+| ID Test   | Descrizione                                           | Passi                                                                                                                                                                | Risultato Atteso                                                                                                                              | Stato   |
+| :-------- | :---------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------- | :------ |
+| TC_RP_001 | Riproduzione sovrapposta per colonna effetti.         | 1. Caricare e avviare un audio lungo su un pulsante in una colonna principale (0-6). <br> 2. Mentre il primo audio è in riproduzione, caricare e premere un pulsante nella colonna 7 (effetti). | L'audio della colonna 7 viene riprodotto immediatamente, sovrapponendosi all'audio principale senza interromperlo. L'audio principale continua la sua riproduzione. | Pass/Fail |
+| TC_RP_002 | Priorità Non-Loop su Loop.                          | 1. Avviare un audio in modalità "Loop" su un pulsante A (traccia principale). <br> 2. Mentre A è in riproduzione, premere un pulsante B (traccia principale) in modalità "Da Capo". | L'audio del pulsante A si ferma istantaneamente. L'audio del pulsante B inizia a suonare immediatamente.                                          | Pass/Fail |
+| TC_RP_003 | Accodamento di traccia Non-Loop.                      | 1. Avviare un audio non-loop (A). <br> 2. Mentre A è in riproduzione, premere un altro pulsante non-loop (B). <br> 3. Premere di nuovo B mentre è in coda. | Al passo 2, A continua a suonare, B inizia a lampeggiare (in coda). <br> Al passo 3, B smette di lampeggiare e viene rimosso dalla coda. | Pass/Fail |
+| TC_RP_004 | Riproduzione automatica dalla coda.                   | 1. Avviare un audio non-loop (A). <br> 2. Mentre A è in riproduzione, premere un altro pulsante non-loop (B) per metterlo in coda. <br> 3. Attendere la fine naturale dell'audio A. | Non appena A finisce, l'audio di B inizia a suonare automaticamente. B diventa la nuova traccia attiva.                                    | Pass/Fail |
+
 ---
 *Questo documento verrà espanso con nuovi test man mano che le funzionalità vengono aggiunte.* 
