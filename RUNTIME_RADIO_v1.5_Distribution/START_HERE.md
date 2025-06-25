@@ -1,4 +1,4 @@
-# 🎉 BENVENUTO IN RUNTIME RADIO v1.5!
+# 🎉 BENVENUTO IN ADVANCED JINGLE MACHINE v1.5!
 
 ## 🎯 INIZIA QUI - Scegli il Tuo Sistema
 
@@ -32,7 +32,7 @@ chmod +x avvia_runtime_radio.sh
 
 ---
 
-## 🎙️ Cos'è RUNTIME RADIO?
+## 🎙️ Cos'è Advanced Jingle Machine?
 
 **Una console audio professionale con 88 pulsanti** per:
 - 📻 **Stazioni Radio** (jingle, spot, sottofondo)
@@ -40,11 +40,15 @@ chmod +x avvia_runtime_radio.sh
 - 🎵 **DJ** (sample, drop, transizioni)
 - 🎪 **Eventi Live** (applausi, effetti speciali)
 
+**Autore**: Simone Pizzi (sviluppo sperimentale con LLM)  
+**Website**: [pizzisimone.runtimeradio.it](https://pizzisimone.runtimeradio.it)
+
 ### ✨ Caratteristiche v1.5:
+- ✅ **Schermata di benvenuto** professionale
 - ✅ **Sistema coda automatico**
 - ✅ **Priorità intelligenti** 
 - ✅ **Effetti sempre sovrapposti**
-- ✅ **Interface professionale**
+- ✅ **Interfaccia professionale** con icona personalizzata
 
 ---
 
@@ -57,4 +61,8 @@ chmod +x avvia_runtime_radio.sh
 
 ---
 
-**🚀 Buon lavoro con RUNTIME RADIO v1.5!** 🎙️✨ 
+## 💝 Software Gratuito
+
+Advanced Jingle Machine è **completamente gratuito**. Se lo trovi utile, considera una donazione su [paypal.me/runtimeradio](https://paypal.me/runtimeradio)
+
+**🚀 Buon lavoro con Advanced Jingle Machine v1.5!** 🎙️✨ 

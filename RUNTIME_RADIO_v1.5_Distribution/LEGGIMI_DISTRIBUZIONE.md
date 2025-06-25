@@ -1,8 +1,11 @@
-# 📦 RUNTIME RADIO v1.5 - Distribuzione
+# 📦 Advanced Jingle Machine v1.5 - Distribuzione
 
 ## 🎯 Contenuto di questa Cartella
 
-Questa cartella contiene tutto il necessario per **utilizzare RUNTIME RADIO v1.5** sul tuo computer.
+Questa cartella contiene tutto il necessario per **utilizzare Advanced Jingle Machine v1.5** sul tuo computer.
+
+**Autore**: Simone Pizzi (sviluppo sperimentale con LLM)  
+**Website**: [pizzisimone.runtimeradio.it](https://pizzisimone.runtimeradio.it)
 
 ### 📁 File e Cartelle:
 
@@ -23,17 +26,17 @@ Questa cartella contiene tutto il necessario per **utilizzare RUNTIME RADIO v1.5
 ### 🖥️ **WINDOWS (Più Semplice):**
 1. **Doppio click** su `AVVIA_RUNTIME_RADIO.bat`
 2. Il sistema controllerà automaticamente Python e le dipendenze  
-3. L'applicazione si avvierà!
+3. L'applicazione si avvierà con la schermata di benvenuto!
 
 ### 🍎 **macOS:**
 1. Apri **Terminale** (Cmd+Spazio → "Terminal")
-2. Naviga alla cartella di RUNTIME RADIO
+2. Naviga alla cartella di Advanced Jingle Machine
 3. `chmod +x avvia_runtime_radio.sh` (solo prima volta)
 4. `./avvia_runtime_radio.sh`
 
 ### 🐧 **LINUX:**
 1. Apri **Terminale**
-2. Naviga alla cartella di RUNTIME RADIO
+2. Naviga alla cartella di Advanced Jingle Machine
 3. `chmod +x avvia_runtime_radio.sh` (solo prima volta)  
 4. `./avvia_runtime_radio.sh`
 
@@ -80,16 +83,24 @@ python3 src/main.py
 - **Documentazione completa**: Cartella `docs/`
 - **Guida utente**: `GUIDA_UTENTE.md`
 - **Problemi tecnici**: Consulta `docs/ANTI_REGRESSION_TESTS.md`
+- **Website**: [pizzisimone.runtimeradio.it](https://pizzisimone.runtimeradio.it)
 
 ---
 
-## 🎉 Benvenuto in RUNTIME RADIO v1.5!
+## 🎉 Benvenuto in Advanced Jingle Machine v1.5!
 
 Questa versione include:
+- ✅ **Schermata di benvenuto** professionale
 - ✅ **Sistema coda automatico**
 - ✅ **Priorità intelligenti** 
 - ✅ **88 pulsanti personalizzabili**
 - ✅ **Effetti speciali sovrapposti**
-- ✅ **Interfaccia professionale**
+- ✅ **Interfaccia professionale** con icona
 
-**Perfetto per radio, podcast, DJ e eventi live!** 🎙️✨ 
+**Perfetto per radio, podcast, DJ e eventi live!** 🎙️✨
+
+## 💝 Software Gratuito
+
+Advanced Jingle Machine è **completamente gratuito** e liberamente scaricabile. Anche se sviluppato con LLM, ha richiesto ingegno, impegno e ore di lavoro.
+
+Se lo trovi utile, considera una donazione: [paypal.me/runtimeradio](https://paypal.me/runtimeradio) 

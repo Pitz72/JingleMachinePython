@@ -1,51 +1,122 @@
-# PROTOCOLLO DI SVILUPPO UMANO-LLM - RUNTIME RADIO
+# Protocollo di Sviluppo - Advanced Jingle Machine
 
-Questo documento definisce le regole della nostra collaborazione per lo sviluppo di "RUNTIME RADIO". Lo scopo è garantire un processo strutturato, prevenire la regressione e massimizzare l'efficacia del lavoro congiunto tra l'umano (Architetto) e l'LLM (Esecutore).
+**Autore**: Simone Pizzi (sviluppo sperimentale con LLM)
 
-## PRINCIPIO 1: La Fonte Unica della Verità (Single Source of Truth)
+Questo documento stabilisce linee guida e best practices per lo sviluppo e manutenzione di Advanced Jingle Machine.
 
-- La cartella `docs/` (che creeremo) e i documenti di design in essa contenuti sono la nostra unica e assoluta fonte di verità.
-- L'LLM non deve mai fare supposizioni. Ogni azione deve essere basata sulla documentazione fornita.
-- L'umano (Simone Pizzi) è responsabile di mantenere questa documentazione aggiornata. L'LLM è responsabile di chiederla e di segnalare eventuali incongruenze tra codice e documenti.
+## Obiettivi del Software
 
-## PRINCIPIO 2: Sviluppo Incrementale e Atomico
+Advanced Jingle Machine è una console audio professionale progettata per:
+- **Radio**: Gestione jingle, spot e basi musicali
+- **Podcast**: Effetti sonori, intro e outro
+- **DJ Set**: Sample, drop e transizioni
+- **Eventi Live**: Effetti speciali e applausi
 
-- **A Piccoli Passi**: Ogni task di sviluppo deve essere il più piccolo possibile, ma completo e testabile (es. "Aggiungere un cursore per il volume globale", non "Rifare tutta la UI").
-- **Un Task, un Commit**: Ogni task completato deve corrispondere a un commit Git con un messaggio chiaro.
-- **Prima il Design, Poi il Codice**: Per ogni nuovo task, aggiorneremo o creeremo un documento di design (anche breve, in un file `TASK_NOME.md`) prima di scrivere il codice.
+## Principi di Sviluppo
 
-## PRINCIPIO 3: Il Rituale del Reset del Contesto
+### 1. Usabilità Prima di Tutto
+- Interfaccia intuitiva con feedback visivo immediato
+- Shortcut e workflow ottimizzati per l'uso dal vivo
+- Gestione errori graceful senza interruzioni
 
-**Problema**: La memoria dell'LLM è volatile.
+### 2. Affidabilità Audio
+- Sistema audio robusto con 128 canali simultanei
+- Gestione priorità e accodamento intelligente
+- Latenza minima per uso professionale
 
-**Soluzione (Il Rituale)**: All'inizio di ogni nuovo task, l'umano deve eseguire questo "rituale":
+### 3. Personalizzazione Totale
+- Ogni pulsante completamente configurabile
+- Persistenza automatica delle configurazioni
+- Temi e colori personalizzabili
 
-1. **Inizializzazione**: "Ciao, oggi lavoriamo al task [NOME_TASK]. L'obiettivo è [OBIETTIVO_DEL_TASK]."
-2. **Caricamento Contesto**: "Per farlo, fai riferimento ai seguenti file: main.py, docs/ARCHITETTURA.md, docs/TASK_NOME.md" (allegando il contenuto).
-3. **Conferma dell'LLM**: L'LLM deve rispondere con una sintesi dell'obiettivo e confermare di aver assimilato il contesto.
+### 4. Codice Pulito e Manutenibile
+- Separazione chiara delle responsabilità
+- Documentazione completa di classi e metodi
+- Test di regressione per funzionalità critiche
 
-## PRINCIPIO 4: Il Protocollo Anti-Regressione
+## Struttura del Codice
 
-- **Definizione del Test**: Dopo aver completato un task, aggiungeremo un nuovo Test Case al file `docs/ANTI_REGRESSION_TESTS.md`.
-- **Documento dei Test**: Il file `docs/ANTI_REGRESSION_TESTS.md` è il registro ufficiale di tutti i test manuali.
-- **Testing di Regressione**: Periodicamente, e sempre prima di un commit importante, l'umano eseguirà (o chiederà all'LLM di simulare l'esecuzione) dei test critici da quel file per assicurarsi che le nuove modifiche non abbiano rotto funzionalità esistenti.
+### Classi Principali
+- `WelcomeDialog`: Schermata di benvenuto e branding
+- `JingleMachine`: Controller principale e orchestratore
+- `JingleButton`: Componente audio autonomo
+- `ButtonSettingsDialog`: Configurazione pulsanti
 
-## PRINCIPIO 5: Definizione dei Ruoli
+### Pattern Utilizzati
+- **Component Pattern**: Ogni pulsante è autonomo
+- **Observer Pattern**: Timer per aggiornamenti stato
+- **State Pattern**: Gestione stati riproduzione
+- **Modal Pattern**: Schermata benvenuto bloccante
 
-- **L'Umano (Simone Pizzi)**: È il Project Manager, l'Architetto del Software, l'UX Designer e il Quality Assurance (QA). Prende le decisioni, definisce i piani, guida il processo e valida il risultato.
-- **L'LLM (Cursor/ChatGPT)**: È il Programmatore, il Technical Writer e il Pair Programmer. Scrive il codice su istruzioni precise, scrive e formatta la documentazione, suggerisce soluzioni tecniche e aiuta a identificare errori. Non prende mai iniziative di design.
+## Workflow di Sviluppo
 
-## PRINCIPIO 6: Gestione della Configurazione (jingle_config.json)
+### 1. Analisi Requisiti
+- Identificare esigenze utente specifiche
+- Valutare impatto su performance audio
+- Considerare compatibilità con configurazioni esistenti
 
-- **Struttura Stabile**: La struttura del file `jingle_config.json` è sacra. Ogni modifica alla sua struttura deve essere documentata e richiede un aggiornamento delle funzioni `get_config` e `set_config` in `main.py`.
-- **Retrocompatibilità**: Se si modifica la struttura, la funzione `load_config` deve essere in grado di gestire (o almeno di non crashare con) le versioni precedenti del file di configurazione, avvisando l'utente.
-- **Robustezza**: Le funzioni di salvataggio e caricamento devono sempre essere racchiuse in blocchi `try...except` per gestire errori di I/O o JSON malformati.
+### 2. Implementazione
+- Sviluppo incrementale con test frequenti
+- Mantenimento retrocompatibilità configurazioni
+- Documentazione simultanea delle modifiche
 
-## PRINCIPIO 7: Aggiornamento della Documentazione
+### 3. Testing
+- Test funzionali manuali (vedi ANTI_REGRESSION_TESTS.md)
+- Verifica performance audio sotto carico
+- Test compatibilità multi-piattaforma
 
-- **Regola Fondamentale**: SEMPRE aggiornare i documenti rilevanti ad ogni task completato.
-- **Documenti Chiave da Mantenere Sincronizzati**:
-  - `README.md`: Per l'utente finale.
-  - `docs/DEVELOPMENT_LOG.md`: Log tecnico delle decisioni.
-  - `docs/ANTI_REGRESSION_TESTS.md`: Aggiungere nuovi test.
-  - `docs/ARCHITETTURA.md`: Se vengono modificate le classi o le loro interazioni. 
+### 4. Rilascio
+- Aggiornamento documentazione completa
+- Versionamento semantico
+- Note di rilascio dettagliate
+
+## Best Practices
+
+### Gestione Audio
+- Sempre verificare stato canali prima di operazioni
+- Cleanup automatico delle risorse audio
+- Gestione eccezioni per errori hardware
+
+### Interfaccia Utente
+- Feedback visivo per ogni azione utente
+- Tooltip informativi e messaggi di errore chiari
+- Layout responsive e accessibile
+
+### Persistenza Dati
+- Salvataggio automatico trasparente
+- Validazione robusta dati di configurazione
+- Backup e recovery per configurazioni importanti
+
+## Versionamento
+
+### Schema Versioni
+- **Major**: Cambiamenti architetturali significativi
+- **Minor**: Nuove funzionalità non breaking
+- **Patch**: Bug fix e miglioramenti minori
+
+### Versione Corrente: 1.5
+- Schermata di benvenuto professionale
+- Rebranding da "RUNTIME RADIO" ad "Advanced Jingle Machine"
+- Sistema coda automatico e priorità intelligenti
+- Interfaccia utente ottimizzata
+
+## Note per LLM Development
+
+### Vantaggi Osservati
+- Rapid prototyping di interfacce complesse
+- Generazione automatica di codice boilerplate
+- Debugging assistito e ottimizzazioni
+
+### Sfide e Soluzioni
+- **Coerenza architetturale**: Documentazione dettagliata dell'architettura
+- **Testing**: Protocolli di test manuali specifici
+- **Manutenibilità**: Commenti esplicativi e naming convention
+
+### Raccomandazioni
+- Mantenere sempre documentazione aggiornata
+- Test approfonditi dopo ogni modifica significativa
+- Backup frequenti del codice funzionante
+
+---
+
+*Protocollo mantenuto aggiornato per Advanced Jingle Machine v1.5* 

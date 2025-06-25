@@ -1,54 +1,81 @@
-# Architettura Software - RUNTIME RADIO v1.5
+# Architettura Software - Advanced Jingle Machine v1.5
 
-Questo documento descrive le componenti principali dell'applicazione **RUNTIME RADIO v1.5** - Jingle Machine professionale con sistema di coda automatico e priorità intelligenti.
+Questo documento descrive le componenti principali dell'applicazione **Advanced Jingle Machine v1.5** - Console audio professionale con sistema di coda automatico, priorità intelligenti e schermata di benvenuto.
+
+**Autore**: Simone Pizzi (sviluppo sperimentale con LLM)
 
 ## Panoramica
 
-L'applicazione è costruita attorno a tre classi principali che interagiscono tra loro:
+L'applicazione è costruita attorno a quattro classi principali che interagiscono tra loro:
+- `WelcomeDialog(QDialog)`: La schermata di benvenuto iniziale.
 - `JingleMachine(QMainWindow)`: La finestra principale e orchestratore.
 - `JingleButton(QPushButton)`: Il componente atomico della griglia, che gestisce un singolo jingle.
 - `ButtonSettingsDialog(QDialog)`: La finestra di dialogo per modificare le impostazioni di un `JingleButton`.
 
-## Diagramma di Interazione (Semplificato)
+## Diagramma di Interazione (Aggiornato)
 
 ```
-[Utente] -> Clicca/Click Destro su [JingleButton]
-[JingleButton] -> Gestisce l'evento
-    - Click: Chiama `play_audio()`
-    - Click Destro: Apre `QMenu`
-[JingleButton] -> `play_audio()` -> Interagisce con [pygame.mixer] per riprodurre/fermare/mettere in pausa il suono.
-[JingleButton] -> Apre [ButtonSettingsDialog] per modificare le sue proprietà.
-[JingleMachine] -> Gestisce la griglia di [JingleButton] e le azioni globali (es. "STOP ALL SOUNDS").
-[JingleMachine] -> Salva/Carica la configurazione di tutti i [JingleButton] da/verso `jingle_config.json`.
+[Utente] -> Avvio Applicazione
+    -> [WelcomeDialog] -> Mostra informazioni autore, licenza, donazioni
+        -> Pulsante "AVVIA SOFTWARE"
+            -> [JingleMachine] -> Finestra principale
+                -> Griglia 8x11 [JingleButton]
+                    -> Click: Gestisce priorità e coda
+                    -> Click Destro: Apre [ButtonSettingsDialog]
+                -> Interazione con [pygame.mixer] (128 canali)
+                -> Salvataggio in [jingle_config.json]
 ```
 
 ## Dettaglio Classi
 
-### `JingleMachine(QMainWindow)`
+### `WelcomeDialog(QDialog)` **[NUOVA]**
+- **Responsabilità:**
+  - Mostrare la schermata di benvenuto all'avvio dell'applicazione
+  - Visualizzare informazioni complete su autore, versione e licenza
+  - Fornire links cliccabili per donazioni e sito web
+  - Gestire l'icona del software e l'interfaccia professionale
+  - Permettere l'avvio del software principale tramite pulsante dedicato
+- **Proprietà Chiave:**
+  - `icon_path`: Percorso dell'icona del software (`../AJM-free/advjingle.png`)
+  - Dimensioni finestra: 700x650 pixel per ottimale visualizzazione
+- **Metodi Chiave:**
+  - `__init__()`: Inizializza la schermata con layout verticale, carica l'icona, configura tutti i widget informativi
+  - Layout responsive con word wrap per testo lungo
+  - Gestione fallback emoji 🎵 se l'icona non è disponibile
+- **Caratteristiche:**
+  - **Tema scuro** coerente con l'applicazione principale
+  - **Links esterni** per PayPal (paypal.me/runtimeradio) e sito web (pizzisimone.runtimeradio.it)
+  - **Finestra modale** che deve essere accettata per procedere
+  - **Pulsante styled** con effetti hover per l'avvio
+
+### `JingleMachine(QMainWindow)` **[AGGIORNATA]**
 - **Responsabilità:**
   - Inizializzare la finestra principale dell'applicazione (1700x550px, tema scuro)
+  - **Gestire l'icona del software** nella finestra principale e taskbar
   - Creare e gestire la griglia 8x11 (88 pulsanti totali) di `JingleButton`
   - Inizializzare il sistema audio Pygame con 128 canali simultanei
   - Fornire il pulsante globale "STOP ALL SOUNDS" per fermare tutti i suoni
-  - Coordinare il salvataggio/caricamento della configurazione generale
+  - Coordinare il salvataggio/caricamento della configurazione generale (**senza messaggi popup**)
   - Gestire la chiusura pulita dell'applicazione
 - **Proprietà Chiave:**
   - `active_main_track_button (JingleButton | None)`: Mantiene un riferimento al pulsante della traccia principale attualmente in riproduzione
   - `queued_main_track_button (JingleButton | None)`: Mantiene un riferimento al pulsante in coda, in attesa di essere riprodotto
+  - **Nome finestra**: "Advanced Jingle Machine v1.5"
+  - **Icona**: Caricata da `../AJM-free/advjingle.png` con fallback sicuro
 - **Metodi Chiave:**
-  - `__init__()`: Inizializza PyGame mixer, crea il layout verticale con pulsante STOP ALL e griglia di pulsanti, applica il tema scuro, carica la configurazione esistente
+  - `__init__()`: Inizializza PyGame mixer, **imposta icona**, crea il layout verticale con pulsante STOP ALL e griglia di pulsanti, applica il tema scuro, carica la configurazione **silenziosamente**
   - `handle_button_press()`: Metodo centrale che gestisce la pressione di un pulsante. Contiene tutta la logica di priorità (Non-Loop vs Loop) e di accodamento
   - `stop_all_sounds()`: Itera su tutti i pulsanti della griglia, ferma ogni suono attivo, resetta gli indicatori visivi e lo stato di riproduzione
   - `save_config()`: Serializza la configurazione di tutti i pulsanti in formato JSON nel file `jingle_config.json`
-  - `load_config()`: Deserializza la configurazione dal file JSON e applica le impostazioni a ogni pulsante
+  - `load_config()`: Deserializza la configurazione dal file JSON e applica le impostazioni a ogni pulsante **senza messaggi popup**
   - `on_playback_finished(button)`: Slot che riceve il segnale `playback_finished`. Controlla se c'è un brano in coda e, in caso affermativo, lo avvia
   - `closeEvent()`: Gestisce la chiusura dell'applicazione salvando automaticamente la configurazione e terminando PyGame
 
-### `JingleButton(QPushButton)`
+### `JingleButton(QPushButton)` **[INVARIATA]**
 - **Responsabilità:**
   - Rappresentare un singolo jingle audio con stato completo e autonomo
   - Gestire tre modalità di riproduzione: Loop (continuo), Continua (pausa/riprendi), Da Capo (stop/restart)
-  - Visualizzare feedback visivo avanzato: colori personalizzati, bordi colorati per stato, progress bar in tempo reale, lampeggio per fine traccia
+  - Visualizzare feedback visivo avanzato: colori personalizzati, bordi colorati per stato, progress bar in tempo reale, lampeggio per fine traccia e coda
   - Gestire il proprio menu contestuale per caricamento audio e impostazioni
   - Mantenere e sincronizzare il proprio stato interno con la configurazione
   - Calcolare e visualizzare il progresso di riproduzione per tracce non-loop
@@ -64,34 +91,30 @@ L'applicazione è costruita attorno a tre classi principali che interagiscono tr
   - `is_playing_visual_indicator`, `is_paused`: Stati per il feedback visivo
   - `playback_start_time_ms`, `paused_at_ms`: Timestamp per calcolo preciso del progresso
   - `is_overlay_effect`: Se `True`, il pulsante appartiene alla colonna degli effetti speciali e la sua riproduzione si sovrappone alle altre
-  - `is_queued (bool)`: Se `True`, il pulsante è in coda e in attesa di essere riprodotto
-- **Metodi Chiave:**
-  - `play_audio()`: Logica complessa che gestisce play/pausa/stop basata sulla modalità selezionata, gestisce i canali Pygame, calcola i timestamp per il progresso
-  - `stop_audio()`: Ferma forzatamente la riproduzione e resetta lo stato visivo del pulsante
-  - `paintEvent()`: Sovrascrive l'evento di disegno per renderizzare la progress bar verde con sfondo semi-trasparente quando appropriato
-  - `_check_playback_status()`: Callback del QTimer (50ms) che aggiorna il progresso di riproduzione, gestisce gli indicatori visivi e controlla lo stato dei canali audio
-  - `contextMenuEvent()`: Gestisce il menu contestuale con opzioni "Carica Audio", "Impostazioni Pulsante", "Rimuovi Audio"
-  - `get_config()` / `set_config()`: Serializzazione/deserializzazione completa dello stato del pulsante, inclusa gestione retrocompatibilità
-  - `_update_style()`: Aggiorna dinamicamente l'aspetto del pulsante basato sullo stato (bordo verde per riproduzione, lampeggio giallo/arancione per fine traccia)
-  - `update_tooltip()`: Genera tooltip dinamici con informazioni dettagliate su nome, file, stato, opzioni e volume
-  - `enforce_playback_option_exclusivity()`: Garantisce che solo una modalità di riproduzione sia attiva, con fallback sicuro a "Da Capo"
+  - `is_queued (bool)`: Se `True`, il pulsante è in coda e in attesa di essere riprodotto (**con lampeggio blu/ciano**)
 
-#### Segnali
-- `playback_finished(object)`: Emesso quando la riproduzione di un suono termina naturalmente. Trasmette un riferimento al pulsante stesso
-
-### `ButtonSettingsDialog(QDialog)`
+### `ButtonSettingsDialog(QDialog)` **[INVARIATA]**
 - **Responsabilità:**
   - Fornire un'interfaccia grafica centralizzata per modificare tutte le impostazioni di un `JingleButton`
   - Organizzare le opzioni in gruppi logici: Nome, Colore, Volume, Modalità di Riproduzione
   - Validare l'input utente e garantire la coerenza delle impostazioni
   - Calcolare automaticamente colori di testo contrastanti per l'anteprima colore
   - Gestire la mutua esclusività delle opzioni di riproduzione tramite RadioButton
-- **Metodi Chiave:**
-  - `__init__(button_data, parent)`: Popola il dialogo con le impostazioni correnti del pulsante, crea i gruppi di controlli (QGroupBox), configura i RadioButton per le modalità di riproduzione
-  - `get_settings()`: Restituisce un dizionario con tutte le nuove impostazioni selezionate dall'utente
-  - `_choose_color()`: Apre il QColorDialog e aggiorna l'anteprima del colore selezionato
-  - `_update_color_label()`: Aggiorna l'etichetta di anteprima colore con background e testo contrastante
-  - `_get_contrasting_text_color()`: Calcola automaticamente il colore del testo (nero/bianco) basato sulla luminanza del background
+
+## Flusso di Avvio (Aggiornato)
+
+1. **Inizializzazione Pygame**: `pygame.init()` per tutti i moduli
+2. **Creazione QApplication**: Inizializzazione dell'interfaccia Qt
+3. **Schermata di Benvenuto**: 
+   - Creazione e visualizzazione `WelcomeDialog`
+   - Caricamento icona software
+   - Attesa input utente (AVVIA SOFTWARE)
+4. **Applicazione Principale**:
+   - Se accettato: creazione `JingleMachine`
+   - Caricamento configurazione silenzioso
+   - Visualizzazione finestra principale
+   - Avvio event loop Qt
+5. **Uscita Alternativa**: Se schermata chiusa senza accettazione, terminazione immediata
 
 ## Flusso di Dati e Persistenza
 
@@ -100,6 +123,7 @@ L'applicazione è costruita attorno a tre classi principali che interagiscono tr
 - **Contenuto per pulsante**: `audio_file`, `custom_name`, modalità di riproduzione, `volume`, `color`, `audio_duration`, `paused_at_ms`
 - **Gestione Errori**: Try-catch per IO e JSON malformato con QMessageBox informativi
 - **Retrocompatibilità**: Validazione della struttura (11x8) e gestione graceful di configurazioni incomplete
+- **Caricamento Silenzioso**: Nessun popup di conferma all'avvio
 
 ### Sistema Audio
 - **Engine**: Pygame Mixer con 128 canali simultanei
@@ -107,10 +131,28 @@ L'applicazione è costruita attorno a tre classi principali che interagiscono tr
 - **Calcolo Progresso**: Basato su `pygame.time.get_ticks()` per precisione temporale
 - **Cleanup**: Stop automatico su rimozione audio e chiusura applicazione
 
+### Gestione Icone
+- **Percorso relativo**: `../AJM-free/advjingle.png` per esecuzione da directory `src/`
+- **Fallback graceful**: Emoji 🎵 se l'icona non è disponibile
+- **Applicazione multipla**: Icona su schermata benvenuto E finestra principale
+
 ## Pattern Architetturali Utilizzati
 
 1. **Component Pattern**: Ogni `JingleButton` è un componente autonomo e riusabile
 2. **Observer Pattern**: QTimer per aggiornamenti periodici dello stato audio
-3. **State Pattern**: Gestione esplicita degli stati di riproduzione (playing/paused/stopped)
-4. **MVC Variants**: `JingleMachine` come controller, `JingleButton` come model+view, `ButtonSettingsDialog` come view specializzata
-5. **Serialization Pattern**: Metodi `get_config()`/`set_config()` per persistenza dello stato 
+3. **State Pattern**: Gestione esplicita degli stati di riproduzione (playing/paused/stopped/queued)
+4. **MVC Variants**: `JingleMachine` come controller, `JingleButton` come model+view, dialoghi come view specializzate
+5. **Serialization Pattern**: Metodi `get_config()`/`set_config()` per persistenza dello stato
+6. **Welcome Screen Pattern**: `WelcomeDialog` per onboarding e informazioni legali/commerciali
+7. **Modal Dialog Pattern**: Schermata bloccante per flow di avvio controllato
+
+## Informazioni di Branding
+
+- **Nome Software**: Advanced Jingle Machine
+- **Versione**: 1.5
+- **Autore**: Simone Pizzi
+- **Metodologia**: Sviluppo sperimentale con LLM
+- **Licenza**: Software gratuito
+- **Donazioni**: paypal.me/runtimeradio
+- **Website**: pizzisimone.runtimeradio.it
+- **Icona**: AJM-free/advjingle.png 

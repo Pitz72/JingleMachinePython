@@ -3,13 +3,136 @@ from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QGridLayout, QPushButton, QMenu, 
     QFileDialog, QInputDialog, QColorDialog, QVBoxLayout, QMessageBox, 
     QSizePolicy, QDialog, QLabel, QLineEdit, QGroupBox, QRadioButton, 
-    QHBoxLayout, QDialogButtonBox, QDoubleSpinBox
+    QHBoxLayout, QDialogButtonBox, QDoubleSpinBox, QSplashScreen
 )
-from PyQt6.QtGui import QColor, QAction, QPainter, QBrush, QPen
+from PyQt6.QtGui import QColor, QAction, QPainter, QBrush, QPen, QPixmap, QFont, QIcon
 from PyQt6.QtCore import Qt, QTimer, QRectF, pyqtSignal
 import pygame
 import json
 import os
+
+# Schermata di Benvenuto
+class WelcomeDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Advanced Jingle Machine v1.5")
+        self.setFixedSize(700, 650)
+        self.setModal(True)
+        
+        # Imposta l'icona della finestra
+        icon_path = "../AJM-free/advjingle.png"
+        if os.path.exists(icon_path):
+            self.setWindowIcon(QIcon(icon_path))
+        
+        layout = QVBoxLayout(self)
+        layout.setSpacing(15)
+        layout.setContentsMargins(40, 30, 40, 30)
+        
+        # Logo/Immagine
+        logo_label = QLabel()
+        if os.path.exists(icon_path):
+            pixmap = QPixmap(icon_path)
+            # Ridimensiona l'immagine mantenendo le proporzioni
+            scaled_pixmap = pixmap.scaled(120, 120, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+            logo_label.setPixmap(scaled_pixmap)
+        else:
+            # Se l'immagine non esiste, mostra un placeholder
+            logo_label.setText("🎵")
+            logo_label.setStyleSheet("font-size: 48px;")
+        logo_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        layout.addWidget(logo_label)
+        
+        # Titolo principale
+        title_label = QLabel("Advanced Jingle Machine")
+        title_font = QFont()
+        title_font.setPointSize(24)
+        title_font.setBold(True)
+        title_label.setFont(title_font)
+        title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        title_label.setStyleSheet("color: #4CAF50; margin-bottom: 10px;")
+        layout.addWidget(title_label)
+        
+        # Versione
+        version_label = QLabel("Versione 1.5")
+        version_font = QFont()
+        version_font.setPointSize(14)
+        version_label.setFont(version_font)
+        version_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        version_label.setStyleSheet("color: #888; margin-bottom: 20px;")
+        layout.addWidget(version_label)
+        
+        # Autore
+        author_label = QLabel("Autore: Simone Pizzi")
+        author_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        author_label.setStyleSheet("color: #FFF; font-size: 12px; margin-bottom: 5px;")
+        layout.addWidget(author_label)
+        
+        # Sviluppo
+        dev_label = QLabel("Sviluppo sperimentale con LLM")
+        dev_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        dev_label.setStyleSheet("color: #AAA; font-size: 10px; margin-bottom: 15px;")
+        layout.addWidget(dev_label)
+        
+        # Testo gratuito
+        free_label = QLabel("Software gratuito e liberamente scaricabile")
+        free_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        free_label.setStyleSheet("color: #4CAF50; font-weight: bold; margin-bottom: 10px;")
+        layout.addWidget(free_label)
+        
+        # Messaggio donazione
+        donation_label = QLabel("Anche se sviluppato con LLM, questo software è costato\ningegno, impegno e ore di lavoro.\n\nSe lo trovi utile, considera una donazione:")
+        donation_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        donation_label.setWordWrap(True)
+        donation_label.setStyleSheet("color: #FFF; font-size: 11px; line-height: 1.6; margin-bottom: 15px; padding: 0 20px;")
+        layout.addWidget(donation_label)
+        
+        # Link PayPal
+        paypal_label = QLabel('<a href="https://paypal.me/runtimeradio" style="color: #4CAF50; text-decoration: none;">paypal.me/runtimeradio</a>')
+        paypal_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        paypal_label.setOpenExternalLinks(True)
+        paypal_label.setStyleSheet("font-weight: bold; margin-bottom: 10px;")
+        layout.addWidget(paypal_label)
+        
+        # Sito web
+        website_label = QLabel('<a href="https://pizzisimone.runtimeradio.it" style="color: #2196F3; text-decoration: none;">pizzisimone.runtimeradio.it</a>')
+        website_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        website_label.setOpenExternalLinks(True)
+        website_label.setStyleSheet("margin-bottom: 20px;")
+        layout.addWidget(website_label)
+        
+        # Pulsante Avvia
+        start_button = QPushButton("🚀 AVVIA SOFTWARE")
+        start_button.setFixedHeight(50)
+        start_button.setStyleSheet("""
+            QPushButton {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 25px;
+                font-size: 16px;
+                font-weight: bold;
+                padding: 10px 20px;
+            }
+            QPushButton:hover {
+                background-color: #45a049;
+            }
+            QPushButton:pressed {
+                background-color: #3d8b40;
+            }
+        """)
+        start_button.clicked.connect(self.accept)
+        layout.addWidget(start_button)
+        
+        # Applica tema scuro
+        self.setStyleSheet("""
+            QDialog {
+                background-color: #2E2E2E;
+                color: #FFFFFF;
+            }
+            QLabel {
+                background-color: transparent;
+            }
+        """)
 
 # Finestra di Dialogo per le Impostazioni del Pulsante
 class ButtonSettingsDialog(QDialog):
@@ -620,7 +743,12 @@ class JingleButton(QPushButton):
 class JingleMachine(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("RUNTIME RADIO v1.5")
+        self.setWindowTitle("Advanced Jingle Machine v1.5")
+        
+        # Imposta l'icona della finestra principale
+        icon_path = "../AJM-free/advjingle.png"
+        if os.path.exists(icon_path):
+            self.setWindowIcon(QIcon(icon_path))
         self.setGeometry(100, 100, 1700, 550) 
 
         pygame.mixer.init()
@@ -853,7 +981,7 @@ class JingleMachine(QMainWindow):
                                 button = self.grid_layout.itemAtPosition(r, c).widget()
                                 if button and isinstance(button, JingleButton):
                                     button.set_config(button_config_data)
-                        QMessageBox.information(self, "Configurazione Caricata", "Configurazione precedente caricata con successo.")
+                        # Configurazione caricata silenziosamente
                     else:
                         QMessageBox.warning(self, "Errore Configurazione", "File di configurazione trovato ma non valido per la griglia 11x8. Verrà creata una nuova configurazione.")
             else:
@@ -864,6 +992,14 @@ class JingleMachine(QMainWindow):
 if __name__ == '__main__':
     pygame.init() # INIZIALIZZA TUTTI I MODULI PYGAME
     app = QApplication(sys.argv)
-    main_window = JingleMachine()
-    main_window.show()
-    sys.exit(app.exec()) 
+    
+    # Mostra la schermata di benvenuto
+    welcome = WelcomeDialog()
+    if welcome.exec() == QDialog.DialogCode.Accepted:
+        # Se l'utente clicca "AVVIA SOFTWARE", mostra la finestra principale
+        main_window = JingleMachine()
+        main_window.show()
+        sys.exit(app.exec())
+    else:
+        # Se l'utente chiude la schermata di benvenuto, esce
+        sys.exit(0) 

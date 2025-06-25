@@ -1,10 +1,12 @@
-# Log di Sviluppo - RUNTIME RADIO
+# Log di Sviluppo - Advanced Jingle Machine
 
-Questo documento traccia le decisioni chiave e i progressi durante lo sviluppo di RUNTIME RADIO.
+Questo documento traccia le decisioni chiave e i progressi durante lo sviluppo di Advanced Jingle Machine.
+
+**Autore**: Simone Pizzi (sviluppo sperimentale con LLM)
 
 ## Inizio Progetto
 
-*   **Obiettivo:** Creare una Jingle Machine con interfaccia grafica per la riproduzione di file audio.
+*   **Obiettivo:** Creare una Console Audio con interfaccia grafica per la riproduzione di file audio.
 *   **Tecnologie Scelte:**
     *   Linguaggio: Python
     *   GUI: PyQt6 (per la sua completezza e buon supporto per temi scuri).
@@ -58,5 +60,60 @@ Questo documento traccia le decisioni chiave e i progressi durante lo sviluppo d
 *   **Risultato:** Progress bar e indicatore di fine traccia funzionanti come previsto.
 *   Rimosse le istruzioni di `print` usate per il debug.
 
+## Fase 3: Sistema Coda e Priorità Intelligenti
+
+*   **Obiettivo:** Implementare sistema di coda automatico con priorità tra tracce loop e non-loop.
+*   **Sviluppo:**
+    *   Aggiunta gestione centralizzata della pressione pulsanti in `JingleMachine.handle_button_press()`
+    *   Implementazione regole di priorità: tracce non-loop hanno priorità su loop
+    *   Sistema di accodamento per tracce non-loop quando altra traccia non-loop è attiva
+    *   Colonna effetti speciali (colonna 8) che si sovrappone sempre
+    *   Feedback visivo per pulsanti in coda (lampeggio blu/ciano)
+*   **Caratteristiche Aggiunte:**
+    *   `active_main_track_button` e `queued_main_track_button` in `JingleMachine`
+    *   Segnale `playback_finished` per gestione automatica della coda
+    *   Stato `is_queued` per `JingleButton`
+    *   Lampeggio visivo differenziato per fine traccia vs coda
+
+## Fase 4: Rebranding e Schermata di Benvenuto
+
+*   **Obiettivo:** Trasformare il software da "RUNTIME RADIO" a "Advanced Jingle Machine" con schermata professionale.
+*   **Modifiche Sostanziali:**
+    *   **Cambio Nome:** Da "RUNTIME RADIO v1.5" a "Advanced Jingle Machine v1.5"
+    *   **Nuova Classe:** `WelcomeDialog(QDialog)` per schermata di benvenuto
+    *   **Icona Software:** Integrazione di `AJM-free/advjingle.png` con fallback emoji 🎵
+    *   **Informazioni Complete:**
+        *   Autore: Simone Pizzi
+        *   Sviluppo sperimentale con LLM
+        *   Software gratuito e liberamente scaricabile
+        *   Links per donazioni (paypal.me/runtimeradio)
+        *   Sito web (pizzisimone.runtimeradio.it)
+*   **Miglioramenti UX:**
+    *   Rimozione popup "Configurazione caricata" per avvio più pulito
+    *   Schermata modale che deve essere accettata per procedere
+    *   Layout responsive con word wrap per testi lunghi
+    *   Dimensioni ottimizzate: 700x650px per visualizzazione completa
+*   **Gestione Percorsi:**
+    *   Percorso icona relativo: `../AJM-free/advjingle.png` per esecuzione da `src/`
+    *   Fallback graceful per icona mancante
+*   **Flow di Avvio:**
+    1. Schermata benvenuto con informazioni
+    2. Pulsante "🚀 AVVIA SOFTWARE"
+    3. Caricamento applicazione principale
+    4. Uscita se schermata chiusa senza accettazione
+
+## Stato Attuale
+
+Il software è ora completamente funzionante come **Advanced Jingle Machine v1.5** con:
+- ✅ Sistema coda automatico e priorità intelligenti
+- ✅ Schermata di benvenuto professionale
+- ✅ Branding completo e informazioni legali
+- ✅ Interfaccia utente ottimizzata
+- ✅ 88 pulsanti personalizzabili con feedback visivo avanzato
+- ✅ 128 canali audio simultanei
+- ✅ Persistenza configurazione silente
+
+**Prossimi Sviluppi:** Da definire in base alle esigenze utente.
+
 ---
-*Questo log verrà aggiornato man mano che lo sviluppo procede.* 
+*Log aggiornato per Advanced Jingle Machine v1.5 - Simone Pizzi* 
