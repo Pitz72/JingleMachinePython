@@ -1,18 +1,19 @@
 // JingleGrid Component
-// This component now receives button configurations as a prop
-// and renders the grid dynamically.
+// This component now also receives the status map and passes
+// the correct status to each JingleButton.
 
 import React from 'react';
 import { JingleButton } from './JingleButton';
-import { ButtonConfig } from '../App'; // Import the shared type
+import { ButtonConfig, PlaybackStatus } from '../App'; // Import shared types
 
 type JingleGridProps = {
     configs: ButtonConfig[];
+    statuses: { [key: string]: PlaybackStatus };
 };
 
 const GRID_COLS = 6;
 
-export const JingleGrid: React.FC<JingleGridProps> = ({ configs }) => {
+export const JingleGrid: React.FC<JingleGridProps> = ({ configs, statuses }) => {
 
     const gridStyle = {
         display: 'grid',
@@ -23,7 +24,11 @@ export const JingleGrid: React.FC<JingleGridProps> = ({ configs }) => {
     return (
         <div style={gridStyle}>
             {configs.map(config => (
-                <JingleButton key={config.id} config={config} />
+                <JingleButton
+                    key={config.id}
+                    config={config}
+                    status={statuses[config.id] || PlaybackStatus.Idle}
+                />
             ))}
         </div>
     );

@@ -1,14 +1,14 @@
 // Main Application Component for Runtime Radio 2.0
-// This component now handles loading the configuration from the backend
-// and managing the application's state.
+// This component now listens for real-time events from the backend
+// to update the UI's playback status.
 
 import React, { useState, useEffect } from 'react';
 import { JingleGrid } from './components/JingleGrid';
 import { WelcomeDialog } from './components/WelcomeDialog';
 import { invoke } from '@tauri-apps/api/tauri';
+import { listen } from '@tauri-apps/api/event';
 
 // --- Types ---
-// These types should ideally be in a shared file, but for simulation they are here.
 export enum PlaybackMode {
     Restart = "Restart",
     Continue = "Continue",
@@ -28,44 +28,69 @@ export interface ButtonConfig {
     fade_out_ms: number;
 }
 
+export enum PlaybackStatus {
+    Idle = 'Idle',
+    Playing = 'Playing',
+    Queued = 'Queued',
+}
+
+// Type for the playback status map
+type StatusMap = { [key: string]: PlaybackStatus };
 
 export const App: React.FC = () => {
-    const [isFirstLaunch, setIsFirstLaunch] = useState(false); // Default to false, check on load
+    const [isFirstLaunch, setIsFirstLaunch] = useState(false);
     const [buttons, setButtons] = useState<ButtonConfig[]>([]);
+    const [statuses, setStatuses] = useState<StatusMap>({});
 
-    // Load configuration from the backend when the component mounts
+    // --- Event Listeners ---
     useEffect(() => {
-        console.log("[Frontend] App mounted. Attempting to load profile...");
+        const setupListeners = async () => {
+            await listen<string>('playback-started', (event) => {
+                console.log('[EVENT] Playback Started:', event.payload);
+                setStatuses(prev => ({ ...prev, [event.payload]: PlaybackStatus.Playing }));
+            });
+
+            await listen<string>('playback-stopped', (event) => {
+                console.log('[EVENT] Playback Stopped:', event.payload);
+                setStatuses(prev => ({ ...prev, [event.payload]: PlaybackStatus.Idle }));
+            });
+
+            await listen<string>('track-queued', (event) => {
+                console.log('[EVENT] Track Queued:', event.payload);
+                setStatuses(prev => ({ ...prev, [event.payload]: PlaybackStatus.Queued }));
+            });
+
+            await listen('all-stopped', () => {
+                console.log('[EVENT] All Stopped');
+                setStatuses({}); // Reset all statuses
+            });
+        };
+        setupListeners();
+    }, []);
+
+    // --- Data Loading ---
+    useEffect(() => {
         invoke<ButtonConfig[]>('load_profile_command')
             .then(loadedButtons => {
-                console.log("[Frontend] Successfully loaded config:", loadedButtons);
                 setButtons(loaded_buttons);
-                // If config is empty or default, it might be the first launch
-                if (loadedButtons.length === 0) {
-                    setIsFirstLaunch(true);
-                }
+                if (loadedButtons.length === 0) setIsFirstLaunch(true);
             })
             .catch(error => {
-                console.error("[Frontend] Failed to load config:", error);
-                // Could show an error message to the user
-                setIsFirstLaunch(true); // Show welcome/setup if config fails
+                console.error("Failed to load config:", error);
+                setIsFirstLaunch(true);
             });
     }, []);
 
-    const handleWelcomeClose = () => {
-        setIsFirstLaunch(false);
-    };
+    const handleWelcomeClose = () => setIsFirstLaunch(false);
 
     return (
         <div className="app-container">
             {isFirstLaunch && <WelcomeDialog onClose={handleWelcomeClose} />}
-
             <header>
                 <h1>Runtime Radio Advanced Jingle Machine v2.0</h1>
             </header>
-
             <main>
-                <JingleGrid configs={buttons} />
+                <JingleGrid configs={buttons} statuses={statuses} />
             </main>
         </div>
     );
