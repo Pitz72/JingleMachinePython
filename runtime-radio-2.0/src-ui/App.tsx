@@ -1,22 +1,58 @@
 // Main Application Component for Runtime Radio 2.0
-// This component will:
-// 1. Initialize the connection with the Tauri backend.
-// 2. Listen for events from the backend (e.g., state changes).
-// 3. Manage the global UI state (e.g., open modals) using Zustand.
-// 4. Render the main layout, including the JingleGrid and WelcomeDialog.
+// This component now handles loading the configuration from the backend
+// and managing the application's state.
 
 import React, { useState, useEffect } from 'react';
 import { JingleGrid } from './components/JingleGrid';
 import { WelcomeDialog } from './components/WelcomeDialog';
+import { invoke } from '@tauri-apps/api/tauri';
+
+// --- Types ---
+// These types should ideally be in a shared file, but for simulation they are here.
+export enum PlaybackMode {
+    Restart = "Restart",
+    Continue = "Continue",
+    Overlay = "Overlay",
+    Queue = "Queue",
+}
+
+export interface ButtonConfig {
+    id: string;
+    name: string;
+    color: string;
+    volume: number;
+    audio_file_path?: string;
+    playback_mode: PlaybackMode;
+    is_loop: boolean;
+    crossfade_ms: number;
+    fade_out_ms: number;
+}
+
 
 export const App: React.FC = () => {
-    // In a real app, this would be determined by checking localStorage
-    const [isFirstLaunch, setIsFirstLaunch] = useState(true);
+    const [isFirstLaunch, setIsFirstLaunch] = useState(false); // Default to false, check on load
+    const [buttons, setButtons] = useState<ButtonConfig[]>([]);
 
-    console.log("Runtime Radio 2.0 UI Initialized");
+    // Load configuration from the backend when the component mounts
+    useEffect(() => {
+        console.log("[Frontend] App mounted. Attempting to load profile...");
+        invoke<ButtonConfig[]>('load_profile_command')
+            .then(loadedButtons => {
+                console.log("[Frontend] Successfully loaded config:", loadedButtons);
+                setButtons(loaded_buttons);
+                // If config is empty or default, it might be the first launch
+                if (loadedButtons.length === 0) {
+                    setIsFirstLaunch(true);
+                }
+            })
+            .catch(error => {
+                console.error("[Frontend] Failed to load config:", error);
+                // Could show an error message to the user
+                setIsFirstLaunch(true); // Show welcome/setup if config fails
+            });
+    }, []);
 
     const handleWelcomeClose = () => {
-        // In a real app, we would set a flag in localStorage here
         setIsFirstLaunch(false);
     };
 
@@ -26,11 +62,10 @@ export const App: React.FC = () => {
 
             <header>
                 <h1>Runtime Radio Advanced Jingle Machine v2.0</h1>
-                {/* Global controls like Stop All, Profile Selector, etc. will go here */}
             </header>
 
             <main>
-                <JingleGrid />
+                <JingleGrid configs={buttons} />
             </main>
         </div>
     );
