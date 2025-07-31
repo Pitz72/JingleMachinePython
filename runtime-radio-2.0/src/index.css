@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-gray-600;
+  }
+  body {
+    @apply bg-gray-900 text-white;
+  }
+}
+
+@layer components {
+  /* Custom button styles for jingle buttons */
+  .jingle-button {
+    @apply relative overflow-hidden rounded-lg border-2 border-gray-600 bg-gray-800 p-4 text-center transition-all duration-200 hover:border-blue-500 hover:bg-gray-700;
+  }
+  
+  .jingle-button.playing {
+    @apply border-green-500 bg-green-900/30 shadow-lg shadow-green-500/20;
+  }
+  
+  .jingle-button.paused {
+    @apply border-yellow-500 bg-yellow-900/30 shadow-lg shadow-yellow-500/20;
+  }
+  
+  .jingle-button.loading {
+    @apply border-blue-500 bg-blue-900/30 shadow-lg shadow-blue-500/20;
+  }
+  
+  /* Progress bar for audio playback */
+  .progress-bar {
+    @apply absolute bottom-0 left-0 h-1 bg-gradient-to-r from-blue-500 to-green-500 transition-all duration-100;
+  }
+  
+  /* Custom scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    @apply w-2;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-gray-800 rounded;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-gray-600 rounded hover:bg-gray-500;
+  }
+  
+  /* Fade animations */
+  .fade-enter {
+    @apply opacity-0;
+  }
+  
+  .fade-enter-active {
+    @apply opacity-100 transition-opacity duration-300;
+  }
+  
+  .fade-exit {
+    @apply opacity-100;
+  }
+  
+  .fade-exit-active {
+    @apply opacity-0 transition-opacity duration-300;
+  }
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .glow {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  }
+  
+  .glow-green {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+  }
+  
+  .glow-red {
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+  }
+}
