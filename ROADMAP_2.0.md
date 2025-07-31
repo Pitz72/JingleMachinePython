@@ -1,6 +1,6 @@
-# Roadmap di Sviluppo per Runtime Radio 2.0
+# Roadmap di Sviluppo per Runtime Radio Advanced Jingle Machine v2.0
 
-Questa roadmap delinea le fasi di sviluppo per la creazione di "Runtime Radio 2.0", basandosi sullo stack tecnologico **Tauri/React** e sull'architettura e feature list definite.
+Questa roadmap delinea le fasi di sviluppo per la creazione di "Runtime Radio Advanced Jingle Machine v2.0", basandosi sullo stack tecnologico **Tauri/React** e sull'architettura e feature list definite.
 
 ---
 
@@ -10,20 +10,16 @@ Questa roadmap delinea le fasi di sviluppo per la creazione di "Runtime Radio 2.
 
 1.  **Setup del Progetto:**
     -   Inizializzare un nuovo progetto Tauri con un template React + TypeScript.
-    -   Configurare la struttura delle directory sia per il frontend (`src-ui`) che per il backend (`src-tauri`).
-    -   Impostare gli strumenti di sviluppo (ESLint, Prettier, ecc.).
-
+    -   Configurare la struttura delle directory.
 2.  **Sviluppo del Backend (Rust):**
-    -   **Modulo Audio:** Implementare il motore audio di base usando `rodio` o `cpal`. Deve essere in grado di caricare un file audio dal disco e riprodurlo.
-    -   **Gestore di Stato:** Creare lo stato centrale dell'applicazione (`AppState`) per contenere la configurazione dei pulsanti e lo stato di riproduzione.
-    -   **Comandi Tauri:** Esportare i comandi di base al frontend: `load_config`, `play_audio`, `stop_audio`.
-
+    -   Implementare il motore audio di base.
+    -   Creare il gestore di stato centrale (`AppState`).
+    -   Esportare i comandi Tauri di base (`load_config`, `play_audio`, `stop_audio`).
 3.  **Sviluppo del Frontend (React):**
-    -   **UI di Base:** Creare i componenti principali della UI: `JingleGrid` e `JingleButton`.
-    -   **Comunicazione:** Collegare la UI ai comandi Tauri. Un click su un `JingleButton` deve invocare il comando `play_audio` nel backend.
-    -   **Stato UI:** Implementare lo store Zustand di base per gestire la configurazione dei pulsanti caricata dal backend.
-
-4.  **Obiettivo di Fase:** Avere una griglia di pulsanti che possono caricare e riprodurre un file audio. Nessuna logica complessa, solo play/stop.
+    -   Creare i componenti UI di base (`JingleGrid` 6x8, `JingleButton`).
+    -   Collegare la UI ai comandi Tauri.
+    -   Implementare lo store Zustand di base.
+4.  **Obiettivo di Fase:** Avere una griglia 6x8 di pulsanti che possono caricare e riprodurre un file audio.
 
 ---
 
@@ -32,15 +28,13 @@ Questa roadmap delinea le fasi di sviluppo per la creazione di "Runtime Radio 2.
 **Obiettivo:** Implementare la logica di business che rende l'applicazione uno strumento professionale.
 
 1.  **Sviluppo del Backend (Rust):**
-    -   **State Machine:** Implementare la logica di riproduzione completa nel `Core Application`: gestione di `mainTrack`, `overlayTracks`, `queuedTracks`.
-    -   **Eventi dal Backend:** Il backend deve emettere eventi per notificare al frontend i cambi di stato (`playback_started`, `playback_finished`, `track_queued`, etc.).
-    -   **Motore Audio Avanzato:** Estendere il motore audio per supportare la riproduzione simultanea di più tracce (per overlay).
-
+    -   Implementare la state machine di riproduzione (`mainTrack`, `overlayTracks`, `queuedTracks`).
+    -   Emettere eventi dal backend per notificare i cambi di stato.
+    -   Estendere il motore audio per la riproduzione simultanea.
 2.  **Sviluppo del Frontend (React):**
-    -   **Event Listeners:** Il frontend deve ascoltare gli eventi dal backend e aggiornare lo store di Zustand di conseguenza.
-    -   **Feedback Visivo:** Il `JingleButton` deve ora mostrare lo stato corretto (play, coda, overlay) basandosi sullo stato globale. Implementare la `Progress Bar`.
-
-3.  **Obiettivo di Fase:** L'applicazione ora gestisce correttamente le modalità `Restart`, `Continue`, `Overlay` e `Queue`.
+    -   Implementare gli event listeners per aggiornare lo stato della UI.
+    -   Implementare il feedback visivo completo sui pulsanti.
+3.  **Obiettivo di Fase:** L'applicazione gestisce correttamente le modalità `Restart`, `Continue`, `Overlay` e `Queue`.
 
 ---
 
@@ -49,16 +43,12 @@ Questa roadmap delinea le fasi di sviluppo per la creazione di "Runtime Radio 2.
 **Obiettivo:** Rendere l'applicazione pienamente configurabile e portabile.
 
 1.  **Sviluppo del Backend (Rust):**
-    -   **Modulo Configurazione:** Implementare la logica per salvare e caricare i **profili** di configurazione.
-    -   **Percorsi Relativi:** Implementare la gestione dei percorsi relativi alla cartella dei media.
-    -   **Migrazione Dati:** Sviluppare la funzione per importare e convertire le configurazioni delle vecchie versioni.
-
+    -   Implementare la gestione dei profili e dei percorsi relativi.
+    -   Sviluppare la funzione di migrazione delle vecchie configurazioni.
 2.  **Sviluppo del Frontend (React):**
-    -   **SettingsDialog:** Implementare la finestra di dialogo completa per la personalizzazione dei pulsanti (nome, colore, volume, modalità, etc.).
-    -   **Gestione Profili:** Creare la UI per creare, cambiare e gestire i profili.
-    -   **UI per Migrazione:** Creare la UI per guidare l'utente nel processo di migrazione.
-
-3.  **Obiettivo di Fase:** L'utente può personalizzare ogni aspetto dell'applicazione, salvare il proprio lavoro in profili portabili e importare le vecchie configurazioni.
+    -   Implementare il `SettingsDialog` completo.
+    -   Creare la UI per la gestione dei profili e della migrazione.
+3.  **Obiettivo di Fase:** L'utente può personalizzare l'app, salvare il lavoro in profili portabili e importare le vecchie configurazioni.
 
 ---
 
@@ -67,16 +57,13 @@ Questa roadmap delinea le fasi di sviluppo per la creazione di "Runtime Radio 2.
 **Obiettivo:** Aggiungere le funzionalità avanzate che distinguono il prodotto.
 
 1.  **Sviluppo del Backend (Rust):**
-    -   **Dissolvenze:** Implementare la logica per `crossfade` e `fade-out` nel motore audio.
-    -   **Mute Groups:** Implementare la logica per i gruppi di esclusione.
-    -   **Input Manager:** Sviluppare il modulo per la gestione degli input da **Tastiera** e **MIDI**.
-
+    -   Implementare la logica per dissolvenze e gruppi di esclusione.
+    -   Sviluppare il modulo per la gestione di input da Tastiera e MIDI.
 2.  **Sviluppo del Frontend (React):**
-    -   **UI per Fades e Gruppi:** Aggiungere le opzioni relative a dissolvenze e gruppi nel `SettingsDialog`.
-    -   **UI per Input Mapping:** Creare una nuova finestra di dialogo per mappare i tasti della tastiera e i controller MIDI ai pulsanti della griglia.
-    -   **Drag and Drop:** Implementare il drag and drop dei file audio sui pulsanti.
-
-3.  **Obiettivo di Fase:** L'applicazione supporta dissolvenze, gruppi di esclusione e controllo esterno tramite tastiera/MIDI.
+    -   Aggiungere le opzioni per fades e gruppi nel `SettingsDialog`.
+    -   Creare la UI per il mapping degli input esterni.
+    -   Implementare il Drag and Drop.
+3.  **Obiettivo di Fase:** L'applicazione supporta dissolvenze, gruppi di esclusione e controllo esterno.
 
 ---
 
@@ -85,14 +72,11 @@ Questa roadmap delinea le fasi di sviluppo per la creazione di "Runtime Radio 2.
 **Obiettivo:** Preparare l'applicazione per il rilascio pubblico.
 
 1.  **Sviluppo Generale:**
-    -   **Internazionalizzazione (i18n):** Integrare un sistema di traduzione (es. `i18next`) e tradurre la UI in italiano e inglese.
-    -   **Testing:** Eseguire test approfonditi su tutte le funzionalità e su tutte le piattaforme (Windows, macOS, Linux).
-    -   **Bug Fixing:** Risolvere i bug emersi durante i test.
-    -   **Ottimizzazione delle Performance:** Profilare l'applicazione e ottimizzare le aree critiche.
-
+    -   Integrare il sistema di traduzione (i18n) per le 8 lingue richieste.
+    -   Eseguire test approfonditi e bug fixing.
+    -   Ottimizzare le performance.
 2.  **Packaging e Distribuzione:**
-    -   **Icone e Branding:** Creare e integrare le icone finali dell'applicazione.
-    -   **Build Pipeline:** Configurare la pipeline di build di Tauri per generare gli **installer nativi** per ogni sistema operativo.
-    -   **Aggiornamenti Automatici:** Configurare e testare il sistema di aggiornamenti automatici.
-
-3.  **Obiettivo di Fase:** Avere una versione 2.0 stabile, performante, pacchettizzata e pronta per essere distribuita agli utenti.
+    -   Creare e integrare le icone e il branding finale, inclusa la `WelcomeDialog` con il testo ufficiale.
+    -   Configurare la build pipeline per gli installer nativi.
+    -   Configurare e testare gli aggiornamenti automatici.
+3.  **Obiettivo di Fase:** Avere una versione 2.0 stabile, performante e pronta per la distribuzione.
