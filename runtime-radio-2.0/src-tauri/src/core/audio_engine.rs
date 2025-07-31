@@ -1,75 +1,93 @@
 // Audio Engine Module
-// This module is responsible for all audio-related operations.
-// It will use a Rust audio library like `rodio` or `cpal`.
-// For this simulation, we'll just define the structure and its methods.
+// This module is now updated to conceptually handle advanced fades.
 
 use std::sync::{Arc, Mutex};
+use crate::core::config_manager::FadeType;
 
-// A handle to a currently playing sound.
-// In a real implementation, this would hold the Rodio `Sink` or `StreamHandle`.
-pub struct SoundHandle(usize);
+// Represents a single, currently playing sound instance.
+pub struct Voice {
+    pub id: String, // Corresponds to the button ID
+    // In a real implementation, this would be a Rodio `Sink` or similar.
+    // We'll use a placeholder.
+    _handle: usize,
+}
 
+// The main audio engine.
+#[derive(Clone)]
 pub struct AudioEngine {
-    // In a real implementation, we'd have the output device and stream here.
-    // For simulation, we'll just track active sounds in a Vec.
-    active_sounds: Arc<Mutex<Vec<SoundHandle>>>,
+    // We now manage a list of active voices.
+    voices: Arc<Mutex<Vec<Voice>>>,
 }
 
 impl AudioEngine {
-    /// Initializes the audio engine and gets a handle to the default output device.
     pub fn new() -> Result<Self, String> {
         println!("AudioEngine: Initializing...");
-        // In a real app:
-        // let (_stream, stream_handle) = rodio::OutputStream::try_default().map_err(|e| e.to_string())?;
-        println!("AudioEngine: Initialization successful.");
         Ok(Self {
-            active_sounds: Arc::new(Mutex::new(Vec::new())),
+            voices: Arc::new(Mutex::new(Vec::new())),
         })
     }
 
-    /// Plays a sound from a file path.
-    /// Returns a handle to the sound that can be used to stop it later.
-    pub fn play(&self, file_path: &str, volume: f32) -> Result<SoundHandle, String> {
-        println!("AudioEngine: Playing file '{}' at volume {:.2}", file_path, volume);
-
-        // In a real app with Rodio:
-        // let file = std::fs::File::open(file_path).map_err(|e| e.to_string())?;
-        // let source = rodio::Decoder::new(file).map_err(|e| e.to_string())?;
-        // let sink = rodio::Sink::try_new(&self.stream_handle).map_err(|e| e.to_string())?;
-        // sink.set_volume(volume);
-        // sink.append(source);
-        // sink.detach(); // Play in background
-
-        // For simulation:
-        let mut sounds = self.active_sounds.lock().unwrap();
-        let handle_id = sounds.len();
-        let handle = SoundHandle(handle_id);
-        sounds.push(handle); // "handle" would be the sink in a real case
-
-        // Return a conceptual handle
-        Ok(SoundHandle(handle_id))
+    /// Plays a new sound immediately, without any fading.
+    pub fn play_immediate(&self, button_id: &str, file_path: &str, volume: f32) {
+        println!("[AudioEngine] Playing '{}' immediately.", button_id);
+        // In a real app, create a new Rodio Sink, set volume, append decoder, and play.
+        let mut voices = self.voices.lock().unwrap();
+        voices.push(Voice { id: button_id.to_string(), _handle: voices.len() });
     }
 
-    /// Stops a specific sound instance using its handle.
-    pub fn stop(&self, handle: SoundHandle) {
-        println!("AudioEngine: Stopping sound with handle {}.", handle.0);
-        // In a real app, the handle would be the sink, and we'd call sink.stop().
+    /// Stops a specific voice by its ID.
+    pub fn stop(&self, button_id: &str) {
+         println!("[AudioEngine] Stopping '{}'.", button_id);
+         let mut voices = self.voices.lock().unwrap();
+         voices.retain(|v| v.id != button_id);
     }
 
-    /// Stops all currently playing sounds.
-    pub fn stop_all(&self) {
-        println!("AudioEngine: Stopping all sounds.");
-        let mut sounds = self.active_sounds.lock().unwrap();
-        // In a real app, we would iterate through all active sinks and stop them.
-        sounds.clear();
+    /// Stops a voice with a fade-out.
+    pub fn fade_out_and_stop(&self, button_id: &str, duration_ms: u32) {
+        println!("[AudioEngine] Fading out '{}' over {}ms.", button_id, duration_ms);
+        // In a real app, get the sink for the voice and call `fade_to` or a similar function
+        // in a separate thread. After the fade, stop the sink and remove the voice.
+        let mut voices = self.voices.lock().unwrap();
+        voices.retain(|v| v.id != button_id);
     }
-}
 
-// The 'impl Clone for AudioEngine' is important so it can be shared across threads in Tauri's state.
-impl Clone for AudioEngine {
-    fn clone(&self) -> Self {
-        Self {
-            active_sounds: Arc::clone(&self.active_sounds),
+    /// The main transition function. It decides which fade logic to use.
+    pub fn transition(
+        &self,
+        from_id: Option<String>,
+        to_config: &crate::core::config_manager::ButtonConfig,
+    ) {
+        let fade_type = &to_config.fade_type;
+        let duration_ms = to_config.fade_duration_ms;
+        let to_id = &to_config.id;
+
+        println!("[AudioEngine] Transitioning from {:?} to {} using {:?} over {}ms", from_id, to_id, fade_type, duration_ms);
+
+        // Stop the old track using the specified fade type
+        if let Some(id) = from_id {
+            self.fade_out_and_stop(&id, duration_ms);
         }
+
+        // Start the new track based on the fade type
+        if let Some(file_path) = &to_config.audio_file_path {
+            match fade_type {
+                FadeType::Crossfade => {
+                    println!("[AudioEngine] Fading in '{}'.", to_id);
+                    // In a real app, start the new sound at volume 0 and fade it in.
+                    self.play_immediate(to_id, file_path, to_config.volume);
+                },
+                FadeType::Duckfade => {
+                     println!("[AudioEngine] Starting '{}' immediately (netto).", to_id);
+                    // Start the new sound at its target volume immediately.
+                    self.play_immediate(to_id, file_path, to_config.volume);
+                }
+            }
+        }
+    }
+
+    pub fn stop_all(&self) {
+        println!("[AudioEngine] Stopping all sounds.");
+        let mut voices = self.voices.lock().unwrap();
+        voices.clear();
     }
 }

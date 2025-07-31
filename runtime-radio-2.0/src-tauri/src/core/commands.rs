@@ -1,38 +1,38 @@
-use crate::{AppState, core::{config_manager::{self, PlaybackMode}, audio_engine}};
-use tauri::{State, Manager}; // Import Manager to emit events
+use crate::{AppState, core::{config_manager::{self, PlaybackMode, ButtonConfig}, audio_engine}};
+use tauri::{State, Manager};
 use std::path::PathBuf;
 
 // --- Helper Functions ---
+
+fn get_button_config(id: &str, state: &State<AppState>) -> Option<ButtonConfig> {
+    state.config.lock().unwrap().iter().find(|b| b.id == id).cloned()
+}
+
+// This function now uses the audio engine's transition logic
 fn play_as_main_track(
-    button_id: &str,
+    config_to_play: &ButtonConfig,
     state: &State<AppState>,
     window: &tauri::Window
 ) {
-    // Stop any currently playing main track
     let mut playback_state = state.playback_state.lock().unwrap();
-    if let Some(current_main_id) = playback_state.main_track_id.take() {
-        // Here we would tell the audio engine to stop the specific sound
-        // For now, we just log it.
-        println!("[Core] Stopping previous main track: {}", current_main_id);
-        window.emit("playback-stopped", current_main_id).unwrap();
-    }
 
-    // Play the new track
-    let config = state.config.lock().unwrap();
-    if let Some(button_config) = config.iter().find(|b| b.id == button_id) {
-        if let Some(file_path) = &button_config.audio_file_path {
-            state.audio_engine.play(file_path, button_config.volume).ok();
-            playback_state.main_track_id = Some(button_id.to_string());
-            println!("[Core] Playing new main track: {}", button_id);
-            window.emit("playback-started", button_id.to_string()).unwrap();
-        }
+    let from_id = playback_state.main_track_id.take();
+
+    // Use the audio engine's transition logic
+    state.audio_engine.transition(from_id.clone(), config_to_play);
+
+    // Update state and emit events
+    playback_state.main_track_id = Some(config_to_play.id.clone());
+    if let Some(id) = from_id {
+        window.emit("playback-stopped", id).unwrap();
     }
+    window.emit("playback-started", config_to_play.id.clone()).unwrap();
 }
 
 // --- Tauri Commands ---
 
 #[tauri::command]
-pub fn load_profile_command(app_handle: tauri::AppHandle, state: State<AppState>) -> Result<Vec<config_manager::ButtonConfig>, String> {
+pub fn load_profile_command(app_handle: tauri::AppHandle, state: State<AppState>) -> Result<Vec<ButtonConfig>, String> {
     let config_dir = app_handle.path_resolver().app_config_dir().unwrap_or_else(|| PathBuf::from("./"));
     match config_manager::load_profile(&config_dir, "default_profile") {
         Ok(loaded_config) => {
@@ -45,75 +45,65 @@ pub fn load_profile_command(app_handle: tauri::AppHandle, state: State<AppState>
 
 #[tauri::command]
 pub fn play_audio_command(button_id: String, state: State<AppState>, window: tauri::Window) {
-    println!("[Commands] Received play_audio_command for ID: {}", &button_id);
-
-    let config_lock = state.config.lock().unwrap();
-    let button_config = match config_lock.iter().find(|b| b.id == button_id) {
-        Some(config) => config.clone(), // Clone to release the lock
-        None => {
-            eprintln!("[Commands] No button found with ID '{}'", button_id);
-            return;
-        }
+    let pressed_button_config = match get_button_config(&button_id, &state) {
+        Some(config) => config,
+        None => return,
     };
-
-    // Drop the lock so other operations can proceed
-    drop(config_lock);
 
     let mut playback_state = state.playback_state.lock().unwrap();
 
-    match button_config.playback_mode {
-        PlaybackMode::Restart => {
-            println!("[Core] Handling Restart mode for {}", &button_id);
-            // Clear the queue
-            if !playback_state.queued_track_ids.is_empty() {
+    let current_main_track_config = playback_state.main_track_id
+        .as_ref()
+        .and_then(|id| get_button_config(id, &state));
+
+    // --- Main Logic ---
+
+    if pressed_button_config.playback_mode == PlaybackMode::Overlay {
+        if let Some(file_path) = &pressed_button_config.audio_file_path {
+            state.audio_engine.play_immediate(&button_id, file_path, pressed_button_config.volume);
+            playback_state.overlay_track_ids.push(button_id.clone());
+            window.emit("overlay-started", button_id).unwrap();
+        }
+        return;
+    }
+
+    if !pressed_button_config.is_loop {
+        if let Some(main_config) = &current_main_track_config {
+            if main_config.is_loop {
                 playback_state.queued_track_ids.clear();
                 window.emit("queue-cleared", ()).unwrap();
-            }
-            // Drop lock before calling helper
-            drop(playback_state);
-            play_as_main_track(&button_id, &state, &window);
-        },
-        PlaybackMode::Continue => {
-            // Simplified logic for now: treat as Restart
-            println!("[Core] Handling Continue mode for {} (as Restart)", &button_id);
-            drop(playback_state);
-            play_as_main_track(&button_id, &state, &window);
-        },
-        PlaybackMode::Overlay => {
-            println!("[Core] Handling Overlay mode for {}", &button_id);
-            if let Some(file_path) = &button_config.audio_file_path {
-                state.audio_engine.play(file_path, button_config.volume).ok();
-                playback_state.overlay_track_ids.push(button_id.clone());
-                window.emit("overlay-started", button_id).unwrap();
-            }
-        },
-        PlaybackMode::Queue => {
-            println!("[Core] Handling Queue mode for {}", &button_id);
-            if playback_state.main_track_id.is_some() {
-                // If something is playing, add to queue
-                playback_state.queued_track_ids.push_back(button_id.clone());
-                println!("[Core] Added {} to queue.", &button_id);
-                window.emit("track-queued", button_id).unwrap();
-            } else {
-                // If nothing is playing, play it as the main track
                 drop(playback_state);
-                play_as_main_track(&button_id, &state, &window);
+                play_as_main_track(&pressed_button_config, &state, &window);
+                return;
             }
         }
     }
+
+    if pressed_button_config.playback_mode == PlaybackMode::Queue {
+        if let Some(main_config) = &current_main_track_config {
+            if !main_config.is_loop {
+                playback_state.queued_track_ids.push_back(button_id.clone());
+                window.emit("track-queued", button_id).unwrap();
+                return;
+            } else {
+                return;
+            }
+        }
+    }
+
+    playback_state.queued_track_ids.clear();
+    window.emit("queue-cleared", ()).unwrap();
+    drop(playback_state);
+    play_as_main_track(&pressed_button_config, &state, &window);
 }
+
 
 #[tauri::command]
 pub fn stop_all_command(state: State<AppState>, window: tauri::Window) {
-    println!("[Commands] Received stop_all_command");
-
     let mut playback_state = state.playback_state.lock().unwrap();
     state.audio_engine.stop_all();
-
     playback_state.main_track_id = None;
     playback_state.overlay_track_ids.clear();
     playback_state.queued_track_ids.clear();
-
-    println!("[Core] All playback stopped and state cleared.");
     window.emit("all-stopped", ()).unwrap();
 }
