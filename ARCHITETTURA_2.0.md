@@ -1,19 +1,20 @@
-# Architettura di Runtime Radio 2.0
+# Architettura di Runtime Radio 2.0 (Python + Eel Edition)
 
-Questo documento descrive l'architettura software proposta per "Runtime Radio 2.0", basata sullo stack tecnologico raccomandato: **Tauri (backend in Rust) e React (frontend in TypeScript)**.
+Questo documento descrive l'architettura software per "Runtime Radio 2.0", basata sullo stack **Python (backend) + Eel (bridge) + React (frontend)**.
 
 ## 1. Principi Architetturali
 
--   **Separazione delle Responsabilità (SoC):** Il frontend (React) è responsabile solo della presentazione e della cattura dell'input utente. Il backend (Rust) gestisce tutta la logica di business, l'elaborazione audio e la comunicazione con il sistema operativo.
--   **Comunicazione tramite Eventi:** Frontend e backend comunicano in modo asincrono tramite un sistema di eventi e comandi gestito da Tauri. Il frontend invia "comandi" (es. `play_audio`, `update_settings`) e il backend emette "eventi" per notificare al frontend i cambiamenti di stato (es. `playback_started`, `track_finished`, `config_updated`).
--   **Stato Reattivo:** Lo stato dell'interfaccia utente è gestito interamente in React. Lo stato del "core" dell'applicazione (ciò che sta suonando, le code, le configurazioni) risiede nel backend Rust e viene sincronizzato con il frontend tramite eventi.
--   **Modularità:** Sia il backend Rust che il frontend React saranno suddivisi in moduli (o "crate" in Rust) con responsabilità specifiche (audio, configurazione, stato, UI, etc.).
+-   **Architettura Ibrida:** L'applicazione è un ibrido. Un processo principale Python gestisce tutta la logica di business e l'audio. Questo processo apre una finestra che renderizza un'interfaccia utente costruita con tecnologie web (React).
+-   **Comunicazione tramite WebSocket:** La libreria `Eel` crea un canale di comunicazione WebSocket tra il backend Python e il frontend JavaScript. Questo permette una comunicazione bi-direzionale e in tempo reale.
+-   **Separazione delle Responsabilità:**
+    -   **Backend (Python):** Ha la piena responsabilità della logica core. Gestisce lo stato di riproduzione, l'interazione con il file system, il caricamento/salvataggio dei profili e il controllo del motore audio (`pygame`).
+    -   **Frontend (React):** È responsabile al 100% della presentazione. Mostra lo stato dell'applicazione, cattura l'input dell'utente e lo invia al backend. Non contiene alcuna logica di business.
 
 ## 2. Diagramma di Alto Livello
 
 ```
 +-------------------------------------------------+
-|              Frontend (React + TS)              |
+|              Frontend (React in Web View)       |
 |                                                 |
 | +------------------+   +----------------------+ |
 | |   UI Componenti  |   | Gestore Stato (Zustand)|
@@ -21,24 +22,24 @@ Questo documento descrive l'architettura software proposta per "Runtime Radio 2.
 | |  SettingsDialog) |<->| (Stato UI, Cache)    | |
 | +------------------+   +----------------------+ |
 |         ^                       |               |
-|         | Eventi (es.          | Comandi (es.  |
-|         | playback_started)     | play_audio)   |
+|         | Funzioni JS           | Chiamate a    |
+|         | esposte a Python      | Funzioni Python
 |         v                       v               |
 +-------------------------------------------------+
-|                  Tauri API Layer                |
+|              Eel WebSocket Bridge               |
 +-------------------------------------------------+
-|                Backend (Rust)                   |
+|                Backend (Python)                 |
 |                                                 |
 | +------------------+   +----------------------+ |
-| |  Gestore Comandi |   |  Core Application    | |
-| |  (Tauri Commands)|<->|  (State Machine)     | |
+| | Funzioni esposte |   |  Core Application    | |
+| | a JS (@eel.expose)|<->|  (State Machine)     | |
 | +------------------+   +----------------------+ |
 |         |                       ^               |
 |         |                       |               |
 |         v                       v               |
 | +------------------+   +----------------------+ |
-| |   Modulo Audio   |   | Modulo Configurazione| |
-| | (Rodio/Cpal)     |<->| (Serde, File System) | |
+| |   Motore Audio   |   | Gestore Configurazione| |
+| | (Pygame)         |<->| (JSON, File System)  | |
 | +------------------+   +----------------------+ |
 |                                                 |
 +-------------------------------------------------+
@@ -46,61 +47,48 @@ Questo documento descrive l'architettura software proposta per "Runtime Radio 2.
 
 ## 3. Componenti Dettagliati
 
-### 3.1. Frontend (React + TypeScript)
+### 3.1. Backend (Python)
 
--   **UI Components:**
-    -   Componenti di presentazione puri (stateless) che ricevono dati e callback tramite props.
-    -   Esempi: `JingleGrid`, `JingleButton`, `SettingsDialog`, `StatusBar`.
-    -   `JingleButton` non conterrà alcuna logica audio. Si limiterà a visualizzare lo stato (colore, progresso) e a invocare comandi (`invoke('play_button', { id: ... })`) al click.
--   **State Management (Zustand):**
-    -   Utilizzeremo una libreria di gestione dello stato leggera come **Zustand** (o Redux Toolkit).
-    -   Lo store conterrà:
-        -   La configurazione dei pulsanti (una cache dello stato del backend).
-        -   Lo stato della UI (es. quale modale è aperto).
-        -   Lo stato di riproduzione corrente (ID delle tracce attive, in pausa, in coda), sincronizzato tramite eventi dal backend.
--   **Event Listeners:**
-    -   Il componente principale `App.tsx` si metterà in ascolto degli eventi provenienti dal backend Rust (es. `appWindow.listen('playback-started', ...)`).
-    -   Quando un evento viene ricevuto, aggiornerà lo store di Zustand, causando un re-render reattivo dei componenti interessati.
+-   **`app.py` (Entry Point):**
+    -   Il file principale che inizializza `Eel`.
+    -   Inizializza le classi del core (es. `AudioEngine`, `ConfigManager`).
+    -   Definisce le funzioni che saranno "esposte" al JavaScript tramite il decoratore `@eel.expose`.
+    -   Avvia la finestra principale con `eel.start()`.
+-   **`audio_engine.py`:**
+    -   Una classe che incapsula tutta la logica di `pygame.mixer`.
+    -   Gestirà la riproduzione, la pausa, lo stop, il volume e le dissolvenze.
+    -   Manterrà uno stato dei canali audio occupati.
+-   **`config_manager.py`:**
+    -   Una classe responsabile del caricamento e salvataggio dei file di profilo `.json`.
+    -   Gestirà la logica dei percorsi relativi.
+-   **Funzioni Esposte (`@eel.expose`):**
+    -   Saranno le porte di accesso del backend. Esempi:
+        -   `@eel.expose\ndef load_profile(): ...`
+        -   `@eel.expose\ndef play_button(button_id): ...`
+        -   `@eel.expose\ndef save_button_settings(button_id, new_config): ...`
 
-### 3.2. Backend (Rust)
+### 3.2. Frontend (React)
 
-Il backend sarà strutturato in diversi moduli ("crate" o "mod") per manutenibilità.
-
--   **Gestore Comandi (`tauri::command`):**
-    -   Funzioni Rust esposte al frontend. Saranno il punto di ingresso per tutte le richieste.
-    -   Esempi: `#[tauri::command] fn play_audio(id: String, state: State<AppState>)`, `#[tauri::command] fn save_settings(...)`.
-    -   Queste funzioni delegheranno il lavoro ai moduli del core.
--   **Core Application (`main_state.rs`):**
-    -   Il "cervello" del backend.
-    -   Contiene lo **stato centrale dell'applicazione** (`AppState`), gestito tramite un `Mutex` o `RwLock` per garantire la sicurezza tra thread.
-    -   Lo stato include: la configurazione completa (`Vec<ButtonConfig>`), le code di riproduzione, i riferimenti alle tracce audio attive, ecc.
-    -   Implementa la logica di business principale (la state machine che decide cosa fare quando un pulsante viene premuto).
--   **Modulo Audio (`audio_engine.rs`):**
-    -   Responsabile di tutta l'interazione con l'hardware audio.
-    -   Utilizzerà una cassa Rust come **`rodio`** (più semplice) o **`cpal`** (più controllo a basso livello) per la riproduzione.
-    -   Gestirà più "voci" o "tracce" simultaneamente per permettere overlay e crossfade.
-    -   Implementerà la logica per fade-in, fade-out e la gestione del volume.
--   **Modulo Configurazione (`config_manager.rs`):**
-    -   Gestirà il caricamento e il salvataggio della configurazione dell'applicazione.
-    -   Utilizzerà **`serde`** per serializzare/deserializzare le struct Rust da/a JSON.
-    -   Implementerà la logica per la gestione dei percorsi relativi e la migrazione da vecchi formati di configurazione (sia dalla versione Python che da quella web).
--   **Modulo MIDI/Tastiera (`input_manager.rs`):**
-    -   Un modulo opzionale da aggiungere in seguito.
-    -   Utilizzerà casse come `midir` per ascoltare gli input MIDI e li tradurrà in comandi interni, che verranno poi inviati al Core Application.
+-   **Comunicazione con Python:**
+    -   `Eel` espone un oggetto `eel` globale nel JavaScript. Per chiamare una funzione Python, si usa `eel.nome_funzione(arg1, arg2)(callback_opzionale)`.
+    -   Esempio: `eel.play_button('btn_1')`
+-   **Aggiornamenti dal Backend:**
+    -   Python può chiamare funzioni JavaScript esposte. Creeremo una funzione globale in React (es. `update_ui(new_state)`) e la esporremo a Eel.
+    -   Python chiamerà `eel.update_ui(nuovo_stato)` ogni volta che lo stato di riproduzione cambia. Questa funzione aggiornerà lo store di Zustand, che a sua volta aggiornerà l'interfaccia.
+-   **Struttura Componenti:**
+    -   La struttura dei componenti React (`App.tsx`, `JingleGrid.tsx`, etc.) rimane identica a quella progettata per la versione Tauri. La differenza è *come* comunicano con il backend (chiamate `eel` invece di `invoke`).
 
 ## 4. Flusso di un'Azione Utente (Esempio: Click su un Pulsante)
 
 1.  **Utente clicca** sul componente `JingleButton` in React.
-2.  Il componente `JingleButton` invoca il suo `onClick` handler, che chiama una funzione proveniente dal componente `App.tsx`.
-3.  La funzione in `App.tsx` esegue: `invoke('play_audio', { buttonId: '...' })`.
-4.  La **Tauri API** riceve il comando e lo instrada alla funzione Rust `#[tauri::command] fn play_audio(...)`.
-5.  La funzione `play_audio` nel **backend Rust**:
-    a. Accede allo stato centrale (`AppState`) in modo sicuro.
-    b. Applica la logica di business (es. "c'è una traccia principale? devo fare un crossfade? devo accodare?").
-    c. Invia i comandi necessari al **Modulo Audio** (es. "riproduci questo file", "sfuma quest'altro").
-    d. Modifica lo `AppState` (es. imposta il nuovo `mainTrackId`).
-    e. Emette un evento al frontend: `window.emit('playback_started', { buttonId: '...', ... })`.
-6.  L'**Event Listener** in `App.tsx` (React) riceve l'evento.
-7.  L'handler dell'evento aggiorna lo **store di Zustand**.
-8.  Zustand notifica i componenti sottoscritti del cambiamento.
-9.  Il componente `JingleButton` (e altri) si ri-renderizza per mostrare il nuovo stato (es. bordo verde, animazione di progresso).
+2.  L'handler `onClick` del pulsante esegue la chiamata: `eel.play_button(config.id)`.
+3.  Il **bridge di Eel** riceve la chiamata e la inoltra alla funzione Python `play_button(button_id)` decorata con `@eel.expose`.
+4.  La funzione **`play_button` in Python**:
+    a. Esegue la logica di business (decide cosa fermare, cosa accodare, etc.).
+    b. Chiama il `AudioEngine` per riprodurre fisicamente il suono.
+    c. Modifica lo stato interno dell'applicazione.
+    d. Prepara un dizionario con il nuovo stato della UI.
+    e. Chiama la funzione JavaScript per notificare il frontend: `eel.update_playback_status(nuovo_stato)`.
+5.  La funzione **`update_playback_status` in JavaScript** riceve i dati.
+6.  Questa funzione aggiorna lo **store di Zustand**.
+7.  I componenti React si ri-renderizzano per mostrare il nuovo stato (es. bordo del pulsante che diventa verde).
