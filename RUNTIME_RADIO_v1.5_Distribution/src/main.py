@@ -15,7 +15,7 @@ import os
 class WelcomeDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("Advanced Jingle Machine v1.5")
+        self.setWindowTitle("Advanced Jingle Machine v1.6")
         self.setFixedSize(700, 650)
         self.setModal(True)
         
@@ -743,7 +743,7 @@ class JingleButton(QPushButton):
 class JingleMachine(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Advanced Jingle Machine v1.5")
+        self.setWindowTitle("Advanced Jingle Machine v1.6")
         
         # Imposta l'icona della finestra principale
         icon_path = "../AJM-free/advjingle.png"

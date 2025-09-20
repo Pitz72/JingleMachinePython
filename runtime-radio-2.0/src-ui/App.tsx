@@ -5,8 +5,8 @@ import React, { useState, useEffect } from 'react';
 import { JingleGrid } from './components/JingleGrid';
 import { WelcomeDialog } from './components/WelcomeDialog';
 // import { SettingsDialog } from './components/SettingsDialog'; // Would be used here
-// Import safe functions that work with or without Tauri backend
-import { safeInvoke as invoke, safeListen as listen } from './utils/tauri-mock';
+import { invoke } from '@tauri-apps/api/tauri';
+import { listen } from '@tauri-apps/api/event';
 
 // --- Types ---
 export enum PlaybackMode {
@@ -69,7 +69,7 @@ export const App: React.FC = () => {
     useEffect(() => {
         invoke<ButtonConfig[]>('load_profile_command')
             .then(loadedButtons => {
-                setButtons(loadedButtons);
+                setButtons(loaded_buttons);
                 if (loadedButtons.length === 0) setIsFirstLaunch(true);
             })
             .catch(error => {

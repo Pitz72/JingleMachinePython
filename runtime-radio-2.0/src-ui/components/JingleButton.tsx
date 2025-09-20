@@ -3,7 +3,7 @@
 // style dynamically to provide visual feedback.
 
 import React from 'react';
-import { safeInvoke as invoke } from '../utils/tauri-mock';
+import { invoke } from '@tauri-apps/api/tauri';
 import { ButtonConfig, PlaybackStatus } from '../App'; // Import shared types
 
 type JingleButtonProps = {

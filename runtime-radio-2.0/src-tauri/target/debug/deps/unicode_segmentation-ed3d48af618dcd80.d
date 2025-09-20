@@ -1,9 +1,0 @@
-C:\Users\Utente\Documents\GitHub\JingleMachinePython\runtime-radio-2.0\src-tauri\target\debug\deps\unicode_segmentation-ed3d48af618dcd80.d: C:\Users\Utente\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\unicode-segmentation-1.12.0\src\lib.rs C:\Users\Utente\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\unicode-segmentation-1.12.0\src\grapheme.rs C:\Users\Utente\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\unicode-segmentation-1.12.0\src\sentence.rs C:\Users\Utente\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\unicode-segmentation-1.12.0\src\word.rs C:\Users\Utente\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\unicode-segmentation-1.12.0\src\tables.rs
-
-C:\Users\Utente\Documents\GitHub\JingleMachinePython\runtime-radio-2.0\src-tauri\target\debug\deps\libunicode_segmentation-ed3d48af618dcd80.rmeta: C:\Users\Utente\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\unicode-segmentation-1.12.0\src\lib.rs C:\Users\Utente\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\unicode-segmentation-1.12.0\src\grapheme.rs C:\Users\Utente\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\unicode-segmentation-1.12.0\src\sentence.rs C:\Users\Utente\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\unicode-segmentation-1.12.0\src\word.rs C:\Users\Utente\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\unicode-segmentation-1.12.0\src\tables.rs
-
-C:\Users\Utente\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\unicode-segmentation-1.12.0\src\lib.rs:
-C:\Users\Utente\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\unicode-segmentation-1.12.0\src\grapheme.rs:
-C:\Users\Utente\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\unicode-segmentation-1.12.0\src\sentence.rs:
-C:\Users\Utente\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\unicode-segmentation-1.12.0\src\word.rs:
-C:\Users\Utente\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\unicode-segmentation-1.12.0\src\tables.rs:

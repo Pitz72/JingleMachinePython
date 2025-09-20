@@ -4,19 +4,22 @@ version = "0.1.0"
 description = "Runtime Radio Advanced Jingle Machine 2.0"
 authors = ["Runtime Radio Team"]
 license = "MIT"
-repository = "https://github.com/your-repo/runtime-radio-2.0"
+repository = "https://github.com/Pitz72/JingleMachinePython"
 default-run = "runtime-radio"
 edition = "2021"
 rust-version = "1.70"
 
 [build-dependencies]
-tauri-build = { version = "2.0", features = [] }
+# Use the latest version that cargo can find for tauri-build
+tauri-build = { version = "2.3.1", features = [] }
 
 [dependencies]
-tauri = { version = "2.0", features = [] }
+# Use the latest version that cargo can find for tauri
+tauri = { version = "2.7.0", features = ["shell-open", "window-start-dragging"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 
 [features]
-default = ["custom-protocol"]
+# this feature is used for production builds or when `devPath` points to the filesystem
+# DO NOT REMOVE!!
 custom-protocol = ["tauri/custom-protocol"]
