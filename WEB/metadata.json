@@ -1,0 +1,6 @@
+{
+  "name": "Runtime Radio Advanced Jingle Machine",
+  "description": "A web-based 'cartelliera' or jingle player inspired by professional broadcast software. It provides a customizable grid of 36 buttons for instant playback of audio jingles, sound effects, and music beds, with advanced features like playback modes, individual volume control, fade-in transitions, and configuration persistence.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
