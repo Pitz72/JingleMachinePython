@@ -1,9 +1,16 @@
+// @ts-ignore - ESM import for idb
 import { openDB, IDBPDatabase } from 'https://esm.sh/idb@8.0.0';
 
 const DB_NAME = 'JingleAudioDB';
 const STORE_NAME = 'audioFiles';
 
-class AudioDB {
+export interface IAudioDatabase {
+  getAudio(id: number): Promise<string | undefined>;
+  setAudio(id: number, data: string): Promise<void>;
+  deleteAudio(id: number): Promise<void>;
+}
+
+class AudioDB implements IAudioDatabase {
   private dbPromise: Promise<IDBPDatabase>;
 
   constructor() {
@@ -29,4 +36,8 @@ class AudioDB {
   }
 }
 
-export const db = new AudioDB();
+// Default instance for backward compatibility
+const defaultDb = new AudioDB();
+
+export { defaultDb as db };
+export { AudioDB };

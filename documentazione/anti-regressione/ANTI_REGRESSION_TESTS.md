@@ -1,8 +1,14 @@
-# Anti-Regression Tests - Runtime Radio Live Machine
+# Anti-Regression Tests - Runtime Radio Live Machine v1.1.0
 
 ## Purpose
 
-This document outlines critical functionality tests to prevent regressions caused by future modifications, especially those involving Large Language Models (LLMs). Each test ensures core features remain intact and functional.
+This document outlines critical functionality tests to prevent regressions caused by future modifications, especially those involving Large Language Models (LLMs). Each test ensures core features remain intact and functional for version 1.1.0 with all enhancements.
+
+## Version Information
+- **Version Tested**: 1.1.0
+- **Release Date**: 2025-09-25
+- **Previous Version**: 1.0.0
+- **Major Changes**: PWA, Themes, MIDI, Mobile Responsiveness, Accessibility
 
 ## Test Categories
 
@@ -129,6 +135,107 @@ This document outlines critical functionality tests to prevent regressions cause
 - [ ] **Node Connections**: Audio graph connects properly
 - [ ] **Parameter Changes**: Real-time parameter updates work
 
+### 🌐 **Progressive Web App (PWA) Tests**
+
+#### **Service Worker**
+- [ ] **SW Registration**: Service worker registers correctly on app load
+- [ ] **Caching Strategy**: Audio files and assets cached for offline use
+- [ ] **Offline Functionality**: App works without internet connection
+- [ ] **Background Sync**: Configuration changes sync when online
+- [ ] **Update Notifications**: New version notifications appear
+
+#### **App Installation**
+- [ ] **Install Prompt**: Browser shows install prompt on supported devices
+- [ ] **Manifest Loading**: Web app manifest loads with correct metadata
+- [ ] **Icons Display**: All app icons display correctly in install prompt
+- [ ] **Standalone Mode**: App launches in standalone mode when installed
+- [ ] **Shortcuts Work**: App shortcuts function correctly
+
+### 🎨 **Theme System Tests**
+
+#### **Theme Switching**
+- [ ] **Dark Theme**: Dark theme applies correctly to all components
+- [ ] **Light Theme**: Light theme applies correctly to all components
+- [ ] **System Preference**: Respects system dark/light mode preference
+- [ ] **Theme Persistence**: Selected theme persists across sessions
+- [ ] **Theme Toggle**: Theme switcher button works correctly
+
+#### **Theme Consistency**
+- [ ] **Component Adaptation**: All components adapt to theme changes
+- [ ] **Visual Hierarchy**: Proper contrast ratios maintained in both themes
+- [ ] **Interactive Elements**: Buttons and controls styled correctly
+- [ ] **Text Readability**: Text remains readable in both themes
+
+### 📱 **Mobile Responsiveness Tests**
+
+#### **Layout Adaptation**
+- [ ] **Grid Responsiveness**: Button grid adapts from 6→11 columns
+- [ ] **Header Compaction**: Header elements stack/scroll on mobile
+- [ ] **Touch Targets**: All interactive elements meet 44px minimum
+- [ ] **Text Scaling**: Text sizes adjust appropriately for screen size
+
+#### **Touch Interactions**
+- [ ] **Touch Playback**: Buttons respond correctly to touch input
+- [ ] **Gesture Support**: Swipe and multi-touch gestures work
+- [ ] **Touch Feedback**: Visual feedback on touch interactions
+- [ ] **Touch Prevention**: No accidental scrolling during audio control
+
+### ♿ **Accessibility Tests**
+
+#### **Screen Reader Support**
+- [ ] **ARIA Labels**: All interactive elements have descriptive labels
+- [ ] **Live Regions**: Audio status announced to screen readers
+- [ ] **Semantic HTML**: Proper heading hierarchy and landmarks
+- [ ] **Focus Management**: Keyboard focus moves logically through interface
+
+#### **Keyboard Navigation**
+- [ ] **Tab Order**: Logical tab order through all controls
+- [ ] **Keyboard Shortcuts**: All documented shortcuts work
+- [ ] **Focus Indicators**: Visible focus indicators on all elements
+- [ ] **Modal Focus**: Focus trapped in modal dialogs
+
+### 🎹 **MIDI Integration Tests**
+
+#### **MIDI Device Detection**
+- [ ] **Device Discovery**: MIDI devices detected on connection
+- [ ] **Permission Request**: Browser requests MIDI access appropriately
+- [ ] **Device Listing**: Connected devices displayed in settings
+- [ ] **Device Disconnection**: Graceful handling of device removal
+
+#### **MIDI Control**
+- [ ] **Note Mapping**: MIDI notes 36-96 map to buttons 0-60
+- [ ] **Real-time Control**: MIDI input triggers button playback
+- [ ] **Velocity Support**: Note velocity affects playback volume
+- [ ] **Multiple Devices**: Multiple MIDI controllers work simultaneously
+
+### 🎛️ **Enhanced Preset System Tests**
+
+#### **Preset Management**
+- [ ] **9 Preset Templates**: All 9 professional presets load correctly
+- [ ] **Preset Switching**: Smooth transitions between presets
+- [ ] **Custom Presets**: User-created presets save and load
+- [ ] **Preset Validation**: Invalid presets handled gracefully
+
+#### **Preset Application**
+- [ ] **Audio Settings**: EQ, panning, and volume applied correctly
+- [ ] **Playback Modes**: Correct playback modes set per preset
+- [ ] **Visual Feedback**: UI updates to reflect preset changes
+- [ ] **Performance**: Preset loading doesn't impact audio playback
+
+### 🔧 **Performance & Stability Tests**
+
+#### **Memory Management**
+- [ ] **No Memory Leaks**: Extended use doesn't increase memory usage
+- [ ] **Audio Cleanup**: Stopped audio releases resources properly
+- [ ] **Context Management**: Audio contexts created/destroyed efficiently
+- [ ] **File Handling**: Large audio files loaded without crashes
+
+#### **Error Handling**
+- [ ] **Error Boundaries**: React errors caught and displayed gracefully
+- [ ] **Audio Failures**: Failed audio operations handled gracefully
+- [ ] **Network Issues**: Offline functionality works when network fails
+- [ ] **Storage Errors**: Full storage handled with user feedback
+
 ### 📱 **Performance Tests**
 
 #### **Memory Management**
@@ -191,6 +298,8 @@ If regressions occur:
 
 ---
 
-**Last Updated**: 2025-09-21
-**Version Tested**: 1.0.0
-**Test Environment**: Chrome 129+, Firefox 130+, Safari 17+
+**Last Updated**: 2025-09-25
+**Version Tested**: 1.1.0
+**Previous Version**: 1.0.0
+**Test Environment**: Chrome 129+, Firefox 130+, Safari 17+, Edge 129+
+**New Features Tested**: PWA, Dark/Light Themes, MIDI Integration, Mobile Responsiveness, Enhanced Accessibility

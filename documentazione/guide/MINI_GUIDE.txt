@@ -1,4 +1,4 @@
-RUNTIME RADIO LIVE MACHINE v1.0 - MINI GUIDE
+RUNTIME RADIO LIVE MACHINE v1.1.0 - MINI GUIDE
 ==========================================
 
 BENVENUTO! Questa guida rapida ti aiuterà a iniziare subito.
@@ -88,7 +88,15 @@ SUPPORTO
 • Test di regressione: ANTI_REGRESSION_TESTS.md
 • Changelog: CHANGELOG.md
 
+NUOVE FUNZIONALITÀ v1.1.0:
+• Installazione PWA per uso offline
+• Temi scuri/chiari con preferenze di sistema
+• Integrazione MIDI per controller hardware
+• Design responsive ottimizzato per mobile
+• Accessibilità completa con supporto screen reader
+• 9 preset professionali invece di 5
+
 DIVERTITI A CREARE AUDIO PROFESSIONALE!
 
-Runtime Radio - Professional Audio Production
+Runtime Radio - Professional Production Suite v1.1.0
 =============================================

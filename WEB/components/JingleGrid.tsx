@@ -35,7 +35,7 @@ const JingleGrid: React.FC<JingleGridProps> = ({
     isSoloActive
   }) => {
   return (
-    <div className="p-4 grid grid-cols-11 gap-3 bg-gray-900">
+    <div className="p-2 sm:p-4 grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-11 gap-2 sm:gap-3 bg-gray-900">
       {buttons.map(button => {
         const isPlaying = mainTrackId === button.id || overlayTrackIds.includes(button.id) || fadingOutTrackIds.includes(button.id);
         const isPaused = pausedTrackId === button.id;

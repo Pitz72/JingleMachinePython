@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslations } from '../contexts/LanguageContext';
+import { useMidi } from '../hooks/useMidi';
 
 interface GlobalSettingsDialogProps {
   onClose: () => void;
@@ -7,6 +8,7 @@ interface GlobalSettingsDialogProps {
   onCrossfaderChange: (value: number) => void;
   playlistMode: boolean;
   onPlaylistModeChange: (enabled: boolean) => void;
+  onMidiTrigger?: (buttonId: number) => void;
 }
 
 const GlobalSettingsDialog: React.FC<GlobalSettingsDialogProps> = ({
@@ -15,8 +17,10 @@ const GlobalSettingsDialog: React.FC<GlobalSettingsDialogProps> = ({
   onCrossfaderChange,
   playlistMode,
   onPlaylistModeChange,
+  onMidiTrigger,
 }) => {
   const { t } = useTranslations();
+  const { isMidiSupported, connectedDevices, requestMidiAccess } = useMidi(onMidiTrigger || (() => {}));
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-40" onClick={onClose}>
@@ -45,6 +49,24 @@ const GlobalSettingsDialog: React.FC<GlobalSettingsDialogProps> = ({
               className="w-4 h-4 text-cyan-600 bg-gray-700 border-gray-600 rounded focus:ring-cyan-500 accent-cyan-500"
             />
             <span className="text-gray-300">{t('label_playlist_mode')}</span>
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-gray-300">MIDI Support</span>
+              <button
+                onClick={requestMidiAccess}
+                disabled={!isMidiSupported}
+                className="px-3 py-1 text-sm bg-purple-600 hover:bg-purple-500 disabled:bg-gray-600 text-white rounded transition-colors"
+              >
+                {isMidiSupported ? 'Enable MIDI' : 'Not Supported'}
+              </button>
+            </div>
+            {connectedDevices.length > 0 && (
+              <div className="text-xs text-gray-400">
+                Connected: {connectedDevices.map(d => d.name).join(', ')}
+              </div>
+            )}
           </div>
         </div>
 
