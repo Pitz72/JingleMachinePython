@@ -10,93 +10,57 @@ const FeaturesDialog: React.FC<FeaturesDialogProps> = ({ onClose }) => {
 
   const features = [
     {
-      category: "🌐 Progressive Web App",
+      category: "🖥️ Native Desktop Experience",
       items: [
-        "Installazione nativa su desktop e mobile",
-        "Funzionamento completo offline",
-        "Service Worker con caching intelligente",
-        "Aggiornamenti automatici e notifiche"
+        "Finestra 16:9 fissa ottimizzata",
+        "Nessuna barra dei menu o distrazioni",
+        "Integrazione Taskbar nativa",
+        "Performance superiori (Electron)"
+      ]
+    },
+    {
+      category: "🎙️ Advanced Recording Studio",
+      items: [
+        "Integrazione Microfono USB/XLR",
+        "Registrazione Mix completo (.webm)",
+        "Monitoraggio audio in tempo reale",
+        "Controlli volume Mic dedicati"
+      ]
+    },
+    {
+      category: "💾 Pro Data Management",
+      items: [
+        "Nuovo formato .rrlm proprietario",
+        "Preset rapidi (Talk, Music, Podcast)",
+        "Salvataggio/Caricamento istantaneo",
+        "Compatibilità retroattiva JSON"
+      ]
+    },
+    {
+      category: "🎨 Premium Dark Interface",
+      items: [
+        "Tema 'Zinc-950' Pro Dark",
+        "Nessuna scrollbar visibile",
+        "Layout Dashboard unificato",
+        "Feedback visivo migliorato"
       ]
     },
     {
       category: "🎹 Integrazione MIDI",
       items: [
-        "Supporto controller hardware MIDI",
-        "Mappatura note configurabile (36-96)",
-        "Controllo real-time delle performance",
-        "Rilevamento automatico dispositivi"
-      ]
-    },
-    {
-      category: "🎨 Sistema Temi",
-      items: [
-        "Modalità scura e chiara complete",
-        "Rilevamento preferenze sistema",
-        "Transizioni fluide tra temi",
-        "Salvaggio preferenze utente"
-      ]
-    },
-    {
-      category: "📱 Design Mobile-First",
-      items: [
-        "Layout responsive adattivo (6→11 colonne)",
-        "Touch targets ottimizzati (44px min)",
-        "Scrolling orizzontale intelligente",
-        "Supporto gesture touch completo"
-      ]
-    },
-    {
-      category: "♿ Accessibilità Completa",
-      items: [
-        "Conformità WCAG 2.1 AA completa",
-        "Screen reader support totale",
-        "Navigazione keyboard completa",
-        "Focus management intelligente"
+        "Supporto controller hardware",
+        "Mappatura note (36-96)",
+        "Zero-latency trigger",
+        "Plug & Play automatico"
       ]
     },
     {
       category: "🎛️ Audio Engine Avanzato",
       items: [
-        "88 pulsanti configurabili (8x11 grid)",
-        "Web Audio API professionale",
-        "3-Band Equalizer ±20dB",
-        "Stereo processing completo"
-      ]
-    },
-    {
-      category: "🎚️ Mixer Professionale",
-      items: [
-        "Solo/Mute individuali",
-        "Cue/Preview mode (-10dB)",
-        "Fade controls configurabili",
-        "Master volume globale"
-      ]
-    },
-    {
-      category: "🎼 Modalità Riproduzione",
-      items: [
-        "Restart, Continue, Overlay, Queue, Loop",
-        "Crossfade automatico",
-        "Playback sequenziale",
-        "Ripetizione infinita"
-      ]
-    },
-    {
-      category: "🎨 User Experience",
-      items: [
-        "8 lingue supportate con flag native",
-        "Feedback visivo real-time",
-        "Sistema Undo/Redo completo",
-        "9 preset professionali"
-      ]
-    },
-    {
-      category: "💾 Data Management",
-      items: [
-        "Auto-save intelligente",
-        "Export/Import JSON completo",
-        "IndexedDB per file audio",
-        "Migrazione configurazioni"
+        "88 Pad configurabili (11x8)",
+        "Equalizzatore 3-Bande ±20dB",
+        "Controlli Fade In/Out",
+        "Modalità Loop & Overlay"
       ]
     }
   ];
@@ -106,8 +70,8 @@ const FeaturesDialog: React.FC<FeaturesDialogProps> = ({ onClose }) => {
       <div className="bg-gray-800 text-white rounded-lg shadow-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-gray-700" onClick={e => e.stopPropagation()}>
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h2 className="text-3xl font-bold text-cyan-400">Runtime Radio Live Machine v1.1.0</h2>
-            <p className="text-lg text-gray-300 mt-1">Suite di Produzione Audio Professionale</p>
+            <h2 className="text-3xl font-bold text-cyan-400">Runtime Radio Live Machine v1.4.1</h2>
+            <p className="text-lg text-gray-300 mt-1">Premium Desktop Production Suite</p>
           </div>
           <button
             onClick={onClose}

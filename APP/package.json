@@ -58,11 +58,12 @@
     "appId": "com.runtimeradio.livemachinepro",
     "productName": "Runtime Radio Live Machine Pro",
     "directories": {
-      "output": "dist_electron"
+      "output": "dist_electron_v1.4.1"
     },
     "files": [
       "dist/**/*",
-      "electron/dist/**/*"
+      "electron/dist/**/*",
+      "assets/**/*"
     ],
     "win": {
       "target": "nsis",

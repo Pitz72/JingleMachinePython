@@ -17,7 +17,7 @@ function createWindow() {
         width: 1280,
         height: 720,
         useContentSize: true, // Ensure the content area matches the aspect ratio
-        icon: path.join(__dirname, '../../dist/favicon.ico'), // Use .ico for better Windows compatibility
+        icon: path.join(__dirname, '../../assets/icon.png'), // Revert to original working icon
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false, // For now, to simplify migration. In Phase 2 we will secure this.
