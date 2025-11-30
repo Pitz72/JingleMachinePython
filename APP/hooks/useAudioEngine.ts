@@ -12,6 +12,7 @@ interface UseAudioEngineProps {
   isFadingIn: boolean;
   isFadingOut: boolean;
   isSoloActive: boolean;
+  isTalkoverActive?: boolean;
 }
 
 export const useAudioEngine = ({
@@ -22,6 +23,7 @@ export const useAudioEngine = ({
   isFadingIn,
   isFadingOut,
   isSoloActive,
+  isTalkoverActive
 }: UseAudioEngineProps) => {
   const database = useDatabase();
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -32,10 +34,13 @@ export const useAudioEngine = ({
   // Local volume state for fading (multiplier 0.0 to 1.0)
   const [fadeMultiplier, setFadeMultiplier] = useState(1.0);
 
-  // Load audio data from IndexedDB
+  // Load audio data (prefer filePath for Electron, fallback to IndexedDB)
   useEffect(() => {
     let isMounted = true;
-    if (config.fileName) {
+    if (config.filePath) {
+      // Electron: Load directly from file system
+      setAudioSrc(`file://${config.filePath}`);
+    } else if (config.fileName) {
       setAudioSrc(null);
       database.getAudio(config.id).then(data => {
         if (isMounted && data) {
@@ -56,7 +61,7 @@ export const useAudioEngine = ({
       setAudioSrc(null);
     }
     return () => { isMounted = false; };
-  }, [config.id, config.fileName, database]);
+  }, [config.id, config.fileName, config.filePath, database]);
 
   // Register with AudioEngine and handle updates
   useEffect(() => {
@@ -78,7 +83,8 @@ export const useAudioEngine = ({
         config,
         fadeMultiplier,
         isSoloActive,
-        config.solo
+        config.solo,
+        isTalkoverActive && !config.isTalkover // Apply ducking if talkover is active AND this is not a talkover channel
       );
 
       audio.loop = config.isLoop;
@@ -112,7 +118,7 @@ export const useAudioEngine = ({
       // Commented out to prevent cutting off tails or rapid unmount/mount issues.
       // Ideally, we unregister when the button is deleted or the app closes.
     };
-  }, [audioSrc, config, masterVolume, isSoloActive, fadeMultiplier]);
+  }, [audioSrc, config, masterVolume, isSoloActive, fadeMultiplier, isTalkoverActive]);
 
   // Handle Playback Control
   useEffect(() => {

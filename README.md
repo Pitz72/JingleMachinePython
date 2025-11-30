@@ -32,38 +32,6 @@
 ## 🛠️ **Installazione Rapida**
 
 ### Prerequisiti
-- **Node.js** 18+ e **npm**
-- **Browser moderno** (Chrome 90+, Firefox 88+, Safari 14+)
-
-### Setup
-```bash
-# Clona il repository
-git clone https://github.com/yourusername/runtime-radio-live-machine.git
-cd runtime-radio-live-machine
-
-# Installa dipendenze
-cd WEB
-npm install
-
-# Avvia development server
-npm run dev
-```
-
-Apri [http://localhost:5173](http://localhost:5173) nel browser.
-
-## 🎼 **Utilizzo Base**
-
-1. **Seleziona lingua** dalle bandiere disponibili
-2. **Installa l'app** (PWA) per esperienza ottimale
-3. **Carica audio** trascinando file sui pulsanti
-4. **Configura** modalità riproduzione e effetti
-5. **Inizia** la tua produzione audio!
-
-## 🏗️ **Architettura Tecnica**
-
-### Stack Tecnologico
-- **Frontend**: React 19 + TypeScript + Tailwind CSS
-- **PWA**: Vite PWA Plugin + Service Worker
 - **Audio**: Web Audio API + MIDI API
 - **State**: React Hooks + Context API
 - **Storage**: IndexedDB + localStorage

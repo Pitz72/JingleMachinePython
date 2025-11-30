@@ -14,6 +14,8 @@ export interface ButtonConfig {
   isLoop: boolean;
   crossfade: boolean;
   fileName: string | null;
+  filePath?: string; // Absolute path for Electron local loading
+  waveform?: number[]; // Normalized waveform data (0-1)
   // Equalizer
   eqLow: number; // dB, -20 to 20
   eqMid: number; // dB, -20 to 20
@@ -28,6 +30,7 @@ export interface ButtonConfig {
   fadeOutDuration: number;
   // Special effects (always overlay)
   isSpecialEffect: boolean;
+  isTalkover?: boolean; // Triggers auto-ducking on other channels
 }
 
 export interface Preset {

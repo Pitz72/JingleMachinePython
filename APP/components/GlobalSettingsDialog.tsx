@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslations } from '../contexts/LanguageContext';
 import { useMidi } from '../hooks/useMidi';
+import { useAudioDevices } from '../hooks/useAudioDevices';
+import AudioEngine from '../services/AudioEngine';
 
 interface GlobalSettingsDialogProps {
   onClose: () => void;
@@ -20,7 +22,14 @@ const GlobalSettingsDialog: React.FC<GlobalSettingsDialogProps> = ({
   onMidiTrigger,
 }) => {
   const { t } = useTranslations();
-  const { isMidiSupported, connectedDevices, requestMidiAccess } = useMidi(onMidiTrigger || (() => {}));
+  const { isMidiSupported, connectedDevices, requestMidiAccess } = useMidi(onMidiTrigger || (() => { }));
+  const { devices } = useAudioDevices();
+  const [selectedDeviceId, setSelectedDeviceId] = useState<string>('default');
+
+  const handleDeviceChange = (deviceId: string) => {
+    setSelectedDeviceId(deviceId);
+    AudioEngine.getInstance().setSinkId(deviceId);
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-40" onClick={onClose}>
@@ -28,6 +37,25 @@ const GlobalSettingsDialog: React.FC<GlobalSettingsDialogProps> = ({
         <h2 className="text-2xl font-bold text-white mb-4">{t('global_settings_title')}</h2>
 
         <div className="space-y-4">
+          {/* Audio Output Selector */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-1">Audio Output Device</label>
+            <select
+              value={selectedDeviceId}
+              onChange={(e) => handleDeviceChange(e.target.value)}
+              className="w-full bg-gray-700 text-white rounded p-2 text-sm border border-gray-600 focus:ring-cyan-500 focus:border-cyan-500"
+            >
+              <option value="default">Default System Output</option>
+              {devices.map(device => (
+                <option key={device.deviceId} value={device.deviceId}>
+                  {device.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <hr className="border-gray-600" />
+
           <div>
             <label className="block text-sm font-medium text-gray-300">{t('label_crossfader')}: {crossfader > 0 ? `R ${crossfader}` : crossfader < 0 ? `L ${Math.abs(crossfader)}` : 'C'}</label>
             <input

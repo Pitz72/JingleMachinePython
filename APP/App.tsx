@@ -269,6 +269,64 @@ const App: React.FC = () => {
     );
   }
 
+  const handleFileDrop = useCallback(async (id: number, file: File) => {
+    // Check for Electron path (absolute path)
+    const filePath = (file as any).path;
+    let audioSrc = '';
+    let fileDataUrl = '';
+
+    if (filePath) {
+      // Electron: Use absolute path
+      audioSrc = `file://${filePath}`;
+    } else {
+      // Web Fallback: Read as Data URL
+      try {
+        fileDataUrl = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target?.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+        audioSrc = fileDataUrl;
+      } catch (e) {
+        console.error("Failed to read file:", e);
+        return;
+      }
+    }
+
+    // Generate Waveform (non-blocking via Worker)
+    let waveform: number[] = [];
+    try {
+      // Import AudioEngine dynamically if needed or use the global one
+      const AudioEngine = (await import('./services/AudioEngine')).default;
+      waveform = await AudioEngine.getInstance().generateWaveform(audioSrc);
+    } catch (e) {
+      console.error("Failed to generate waveform:", e);
+    }
+
+    if (filePath) {
+      // Electron: Update state with filePath and waveform
+      setButtons(prev => prev.map(b => {
+        if (b.id === id) {
+          return {
+            ...b,
+            fileName: file.name,
+            filePath: filePath,
+            waveform: waveform
+          };
+        }
+        return b;
+      }));
+    } else {
+      // Web: Save to DB and update state
+      handleSaveSettings({
+        ...buttons.find(b => b.id === id)!,
+        fileName: file.name,
+        waveform: waveform
+      }, fileDataUrl);
+    }
+  }, [buttons, handleSaveSettings]);
+
   return (
     <div className={`${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'} min-h-screen font-sans`}>
       <header className={`${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'} p-4 text-center shadow-lg`} role="banner">
@@ -385,6 +443,14 @@ const App: React.FC = () => {
           fadingInTrackId={fadingInTrackId}
           masterVolume={masterVolume}
           isSoloActive={isSoloActive}
+          onFileDrop={handleFileDrop}
+          isTalkoverActive={buttons.some(b =>
+            b.isTalkover && (
+              mainTrackId === b.id ||
+              overlayTrackIds.includes(b.id) ||
+              fadingOutTrackIds.includes(b.id)
+            )
+          )}
         />
       </main>
       {editingButton && (

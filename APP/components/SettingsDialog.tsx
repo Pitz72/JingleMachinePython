@@ -42,16 +42,16 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ buttonConfig, onClose, 
       reader.onload = (loadEvent) => {
         const base64 = loadEvent.target?.result as string;
         setNewAudioData(base64);
-        
+
         const fileNameWithoutExt = file.name.split('.').slice(0, -1).join('.') || file.name;
-        
+
         setConfig(prev => {
-            const isDefaultName = prev.name.startsWith(t('default_jingle_name')) || prev.name === '';
-            return {
-                ...prev,
-                fileName: file.name,
-                name: isDefaultName ? fileNameWithoutExt : prev.name
-            };
+          const isDefaultName = prev.name.startsWith(t('default_jingle_name')) || prev.name === '';
+          return {
+            ...prev,
+            fileName: file.name,
+            name: isDefaultName ? fileNameWithoutExt : prev.name
+          };
         });
       };
       reader.readAsDataURL(file);
@@ -62,7 +62,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ buttonConfig, onClose, 
     onSave(config, newAudioData);
     onClose();
   };
-  
+
   const handleRemove = () => {
     onRemoveAudio(config.id);
     onClose();
@@ -72,7 +72,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ buttonConfig, onClose, 
     onClear(config.id);
     onClose();
   };
-  
+
   const playbackModes = Object.values(PlaybackMode);
 
   return (
@@ -90,22 +90,22 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ buttonConfig, onClose, 
               className="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm text-white p-2 focus:ring-cyan-500 focus:border-cyan-500"
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">{t('label_color')}</label>
             <div className="grid grid-cols-6 gap-2">
-                {COLOR_PALETTE.map(color => (
-                    <button
-                        key={color}
-                        type="button"
-                        onClick={() => setConfig(prev => ({...prev, color}))}
-                        className={`w-10 h-10 rounded-full border-2 transition-transform transform hover:scale-110
+              {COLOR_PALETTE.map(color => (
+                <button
+                  key={color}
+                  type="button"
+                  onClick={() => setConfig(prev => ({ ...prev, color }))}
+                  className={`w-10 h-10 rounded-full border-2 transition-transform transform hover:scale-110
                             ${config.color === color ? 'ring-2 ring-offset-2 ring-offset-gray-800 ring-white' : 'border-transparent'}
                         `}
-                        style={{ backgroundColor: color }}
-                        aria-label={`Select color ${color}`}
-                    />
-                ))}
+                  style={{ backgroundColor: color }}
+                  aria-label={`Select color ${color}`}
+                />
+              ))}
             </div>
           </div>
 
@@ -140,7 +140,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ buttonConfig, onClose, 
               ))}
             </div>
           </div>
-          
+
           <div className="flex space-x-6">
             <label className="flex items-center space-x-3 cursor-pointer">
               <input
@@ -278,6 +278,17 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ buttonConfig, onClose, 
                   <span className="text-gray-300">{t('label_cue')}</span>
                 </label>
               </div>
+              <div className="flex space-x-6 pt-2">
+                <label className="flex items-center space-x-3 cursor-pointer" title="Ducks other channels when playing">
+                  <input
+                    type="checkbox"
+                    checked={config.isTalkover || false}
+                    onChange={e => setConfig(prev => ({ ...prev, isTalkover: e.target.checked }))}
+                    className="w-4 h-4 text-amber-500 bg-gray-700 border-gray-600 rounded focus:ring-amber-500 accent-amber-500"
+                  />
+                  <span className="text-amber-400 font-semibold">Talkover / Mic</span>
+                </label>
+              </div>
             </div>
           </div>
 
@@ -289,7 +300,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ buttonConfig, onClose, 
                 <input type="file" accept="audio/*" className="hidden" onChange={handleFileChange} />
               </label>
               {config.fileName && (
-                 <button onClick={handleRemove} className="bg-amber-600 hover:bg-amber-700 text-white text-sm py-2 px-3 rounded-md">{t('remove_audio')}</button>
+                <button onClick={handleRemove} className="bg-amber-600 hover:bg-amber-700 text-white text-sm py-2 px-3 rounded-md">{t('remove_audio')}</button>
               )}
             </div>
           </div>
@@ -302,8 +313,8 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({ buttonConfig, onClose, 
             <button onClick={handleSave} className="py-2 px-4 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-md">{t('save_button')}</button>
           </div>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 

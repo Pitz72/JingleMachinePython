@@ -18,22 +18,26 @@ interface JingleGridProps {
   fadingInTrackId: number | null;
   masterVolume: number;
   isSoloActive: boolean;
+  onFileDrop: (id: number, file: File) => void;
+  isTalkoverActive: boolean;
 }
 
 const JingleGrid: React.FC<JingleGridProps> = ({
-    buttons,
-    onButtonClick,
-    onButtonEnded,
-    onButtonSettings,
-    mainTrackId,
-    overlayTrackIds,
-    queuedTrackIds,
-    pausedTrackId,
-    fadingOutTrackIds,
-    fadingInTrackId,
-    masterVolume,
-    isSoloActive
-  }) => {
+  buttons,
+  onButtonClick,
+  onButtonEnded,
+  onButtonSettings,
+  mainTrackId,
+  overlayTrackIds,
+  queuedTrackIds,
+  pausedTrackId,
+  fadingOutTrackIds,
+  fadingInTrackId,
+  masterVolume,
+  isSoloActive,
+  onFileDrop,
+  isTalkoverActive
+}) => {
   return (
     <div className="p-2 sm:p-4 grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-11 gap-2 sm:gap-3 bg-gray-900">
       {buttons.map(button => {
@@ -44,20 +48,22 @@ const JingleGrid: React.FC<JingleGridProps> = ({
         const isFadingOut = fadingOutTrackIds.includes(button.id);
 
         return (
-            <JingleButton
-                key={button.id}
-                config={button}
-                onClick={onButtonClick}
-                onEnded={onButtonEnded}
-                onSettings={onButtonSettings}
-                isPlaying={isPlaying}
-                isPaused={isPaused}
-                isQueued={isQueued}
-                isFadingIn={isFadingIn}
-                isFadingOut={isFadingOut}
-                masterVolume={masterVolume}
-                isSoloActive={isSoloActive}
-            />
+          <JingleButton
+            key={button.id}
+            config={button}
+            onClick={onButtonClick}
+            onEnded={onButtonEnded}
+            onSettings={onButtonSettings}
+            isPlaying={isPlaying}
+            isPaused={isPaused}
+            isQueued={isQueued}
+            isFadingIn={isFadingIn}
+            isFadingOut={isFadingOut}
+            masterVolume={masterVolume}
+            isSoloActive={isSoloActive}
+            onFileDrop={onFileDrop}
+            isTalkoverActive={isTalkoverActive}
+          />
         );
       })}
     </div>
