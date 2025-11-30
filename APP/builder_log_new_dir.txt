@@ -1,0 +1,15 @@
+  ÔÇó electron-builder  version=26.0.12 os=10.0.26100
+  ÔÇó loaded configuration  file=package.json ("build" field)
+  ÔÇó description is missed in the package.json  appPackageFile=C:\Users\Utente\Documents\GitHub\JingleMachinePython\APP\package.json
+  ÔÇó author is missed in the package.json  appPackageFile=C:\Users\Utente\Documents\GitHub\JingleMachinePython\APP\package.json
+  ÔÇó executing @electron/rebuild  electronVersion=39.2.4 arch=x64 buildFromSource=false appDir=./
+  ÔÇó installing native dependencies  arch=x64
+  ÔÇó completed installing native dependencies
+  ÔÇó packaging       platform=win32 arch=x64 electron=39.2.4 appOutDir=dist_electron_v1.3.0\win-unpacked
+  ÔÇó updating asar integrity executable resource  executablePath=dist_electron_v1.3.0\win-unpacked\Runtime Radio Live Machine Pro.exe
+  ÔÇó signing with signtool.exe  path=dist_electron_v1.3.0\win-unpacked\Runtime Radio Live Machine Pro.exe
+  ÔÇó building        target=nsis file=dist_electron_v1.3.0\Runtime Radio Live Machine Pro Setup 1.3.0.exe archs=x64 oneClick=true perMachine=false
+  ÔÇó signing with signtool.exe  path=dist_electron_v1.3.0\win-unpacked\resources\elevate.exe
+  ÔÇó signing with signtool.exe  path=dist_electron_v1.3.0\__uninstaller-nsis-runtime-radio-live-machine-pro.exe
+  ÔÇó signing with signtool.exe  path=dist_electron_v1.3.0\Runtime Radio Live Machine Pro Setup 1.3.0.exe
+  ÔÇó building block map  blockMapFile=dist_electron_v1.3.0\Runtime Radio Live Machine Pro Setup 1.3.0.exe.blockmap

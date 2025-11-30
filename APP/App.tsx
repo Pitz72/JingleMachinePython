@@ -248,37 +248,6 @@ const App: React.FC = () => {
     }
   }, [handleStopAll, setButtonsInitial]);
 
-  const isSoloActive = buttons.some(b => b.solo);
-  const editingButton = buttons.find(b => b.id === editingButtonId);
-
-  // App flow: Language -> Welcome -> Main App
-  const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
-
-  // Always show language selection if no language is saved
-  if (!savedLanguage) {
-    return <LanguageSelectionDialog />;
-  }
-
-  // Always show welcome screen after language selection
-  if (appState === 'language' || appState === 'welcome') {
-    return (
-      <div className={`${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'} min-h-screen font-sans`}>
-        {/* Screen reader announcements */}
-        <div aria-live="polite" aria-atomic="true" className="sr-only" id="audio-status">
-          {mainTrackId !== null && `Playing button ${mainTrackId + 1}`}
-          {pausedTrackId !== null && `Paused button ${pausedTrackId + 1}`}
-          {overlayTrackIds.length > 0 && `Overlay playing: ${overlayTrackIds.map(id => id + 1).join(', ')}`}
-          {queuedTrackIds.length > 0 && `Queued: ${queuedTrackIds.map(id => id + 1).join(', ')}`}
-        </div>
-        <WelcomeDialog onStart={() => {
-          setAppState('main');
-          // Save language preference
-          localStorage.setItem(LANGUAGE_STORAGE_KEY, language || 'en');
-        }} />
-      </div>
-    );
-  }
-
   const handleFileDrop = useCallback(async (id: number, file: File) => {
     // Check for Electron path (absolute path)
     const filePath = (file as any).path;
@@ -336,6 +305,39 @@ const App: React.FC = () => {
       }, fileDataUrl);
     }
   }, [buttons, handleSaveSettings]);
+
+  const isSoloActive = buttons.some(b => b.solo);
+  const editingButton = buttons.find(b => b.id === editingButtonId);
+
+  // App flow: Language -> Welcome -> Main App
+  const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+
+  // Always show language selection if no language is saved
+  if (!savedLanguage) {
+    return <LanguageSelectionDialog />;
+  }
+
+  // Always show welcome screen after language selection
+  if (appState === 'language' || appState === 'welcome') {
+    return (
+      <div className={`${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'} min-h-screen font-sans`}>
+        {/* Screen reader announcements */}
+        <div aria-live="polite" aria-atomic="true" className="sr-only" id="audio-status">
+          {mainTrackId !== null && `Playing button ${mainTrackId + 1}`}
+          {pausedTrackId !== null && `Paused button ${pausedTrackId + 1}`}
+          {overlayTrackIds.length > 0 && `Overlay playing: ${overlayTrackIds.map(id => id + 1).join(', ')}`}
+          {queuedTrackIds.length > 0 && `Queued: ${queuedTrackIds.map(id => id + 1).join(', ')}`}
+        </div>
+        <WelcomeDialog onStart={() => {
+          setAppState('main');
+          // Save language preference
+          localStorage.setItem(LANGUAGE_STORAGE_KEY, language || 'en');
+        }} />
+      </div>
+    );
+  }
+
+
 
   return (
     <div className={`${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'} min-h-screen font-sans`}>

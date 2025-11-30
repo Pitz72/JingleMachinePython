@@ -1,0 +1,27 @@
+
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mC:/Users/Utente/Documents/GitHub/JingleMachinePython/APP[39m
+
+ [33mÔØ»[39m App.test.tsx [2m ([22m[2m0 test[22m[2m)[22m
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ» Failed Suites 1 ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+
+ FAIL  App.test.tsx [ App.test.tsx ]
+ReferenceError: indexedDB is not defined
+ ÔØ» Module.openDB node_modules/idb/build/index.js:12:21
+     10|  */
+     11| function openDB(name, version, { blocked, upgrade, blocking, terminateÔÇª
+     12|     const request = indexedDB.open(name, version);
+       |                     ^
+     13|     const openPromise = wrap(request);
+     14|     if (upgrade) {
+ ÔØ» new AudioDB db.ts:17:22
+ ÔØ» db.ts:40:19
+ ÔØ» contexts/DatabaseContext.tsx:3:31
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[1/1]ÔÄ»
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [2mno tests[22m
+[2m   Start at [22m 13:25:35
+[2m   Duration [22m 1.14s[2m (transform 104ms, setup 64ms, collect 0ms, tests 0ms, environment 375ms, prepare 98ms)[22m
+

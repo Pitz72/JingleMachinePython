@@ -66,7 +66,7 @@ RuntimeRadioLiveMachine/
 - **Memory Usage**: Leak prevention attivo
 - **Accessibility**: 95% WCAG compliance
 - **PWA Score**: 100% Lighthouse
-# Runtime Radio Live Machine Pro v1.3.0
+# Runtime Radio Live Machine Pro v1.3.1
 - ✅ Rilevamento preferenze sistema
 - ✅ Transizioni fluide tra temi
 - ✅ Salvataggio preferenze utente

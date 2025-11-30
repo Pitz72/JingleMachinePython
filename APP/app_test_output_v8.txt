@@ -1,0 +1,45 @@
+
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mC:/Users/Utente/Documents/GitHub/JingleMachinePython/APP[39m
+
+ [33mÔØ»[39m App.test.tsx [2m ([22m[2m1 test[22m [2m|[22m [31m1 failed[39m[2m)[22m[90m 13[2mms[22m[39m
+[31m   [33mÔØ»[31m App.test.tsx[2m > [22mApp[2m > [22mrenders without crashing[39m
+[31m     ÔåÆ [vitest] No "AudioDB" export is defined on the "./db" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+[39m
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ» Failed Tests 1 ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+
+ FAIL  App.test.tsx > App > renders without crashing
+Error: [vitest] No "AudioDB" export is defined on the "./db" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+vi.mock("./db", async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    // your mocked methods
+  }
+})
+
+ ÔØ» DatabaseProvider contexts/DatabaseContext.tsx:21:18
+     19| export const DatabaseProvider: React.FC<DatabaseProviderProps> = ({
+     20|   children,
+     21|   database = new AudioDB()
+       |                  ^
+     22| }) => {
+     23|   return (
+ ÔØ» Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:23863:20
+ ÔØ» renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:5529:22
+ ÔØ» updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:8897:19
+ ÔØ» beginWork node_modules/react-dom/cjs/react-dom-client.development.js:10522:18
+ ÔØ» runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1522:13
+ ÔØ» performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:15140:22
+ ÔØ» workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:14956:41
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[1/1]ÔÄ»
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m   Start at [22m 13:26:50
+[2m   Duration [22m 1.26s[2m (transform 146ms, setup 66ms, collect 301ms, tests 13ms, environment 388ms, prepare 127ms)[22m
+

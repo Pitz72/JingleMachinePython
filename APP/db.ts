@@ -1,5 +1,5 @@
 // @ts-ignore - ESM import for idb
-import { openDB, IDBPDatabase } from 'https://esm.sh/idb@8.0.0';
+import { openDB, IDBPDatabase } from 'idb';
 
 const DB_NAME = 'JingleAudioDB';
 const STORE_NAME = 'audioFiles';

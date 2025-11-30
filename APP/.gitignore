@@ -25,4 +25,8 @@ dist-ssr
 
 # Electron
 dist_electron
+dist_electron_v*
 electron/dist
+
+# Testing
+coverage
