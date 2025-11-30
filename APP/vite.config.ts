@@ -5,14 +5,15 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig(() => {
   return {
+    base: './',
     plugins: [
       react(),
       VitePWA({
         registerType: 'autoUpdate',
         includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
         manifest: {
-          name: 'Runtime Radio Live Machine',
-          short_name: 'RRLM',
+          name: 'Runtime Radio Live Machine Pro',
+          short_name: 'RRLM Pro',
           description: 'Professional web-based audio console for radio, podcast, and live event production',
           theme_color: '#06b6d4',
           background_color: '#111827',

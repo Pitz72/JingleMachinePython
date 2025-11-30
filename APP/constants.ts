@@ -4,7 +4,7 @@ import { Preset, PlaybackMode } from './types';
 export const GRID_ROWS = 8;
 export const GRID_COLS = 11;
 export const TOTAL_BUTTONS = GRID_ROWS * GRID_COLS;
-export const LOCAL_STORAGE_KEY = 'jingle_machine_config_v1.5_web';
+export const LOCAL_STORAGE_KEY = 'jingle_machine_config_v2.0_pro';
 
 // Audio and timing constants
 export const DEFAULT_FADE_DURATION = 2000; // ms

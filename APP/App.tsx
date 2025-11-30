@@ -99,50 +99,50 @@ const App: React.FC = () => {
 
         // MIGRATION: Handle multiple potential legacy formats
         if (Array.isArray(parsedConfig) && parsedConfig.length > 0) {
-            let needsMigration = false;
-            const firstBtn = parsedConfig[0];
-            // Check for legacy audioSrc, missing isLoop/crossfade, or old Italian playback modes
-            if (firstBtn.hasOwnProperty('audioSrc') ||
-                !firstBtn.hasOwnProperty('isLoop') ||
-                !firstBtn.hasOwnProperty('crossfade') ||
-                ['Da Capo', 'Continua', 'Accoda'].includes(firstBtn.playbackMode) ||
-                !firstBtn.hasOwnProperty('eqLow')) {
-                needsMigration = true;
-            }
+          let needsMigration = false;
+          const firstBtn = parsedConfig[0];
+          // Check for legacy audioSrc, missing isLoop/crossfade, or old Italian playback modes
+          if (firstBtn.hasOwnProperty('audioSrc') ||
+            !firstBtn.hasOwnProperty('isLoop') ||
+            !firstBtn.hasOwnProperty('crossfade') ||
+            ['Da Capo', 'Continua', 'Accoda'].includes(firstBtn.playbackMode) ||
+            !firstBtn.hasOwnProperty('eqLow')) {
+            needsMigration = true;
+          }
 
-            if(needsMigration) {
-                console.warn("Old configuration format detected. Migrating to new format.");
-                alert(t('migration_alert'));
-                parsedConfig = parsedConfig.map((btn: any) => {
-                    const { audioSrc, ...rest } = btn;
-                    let newPlaybackMode = btn.playbackMode;
-                    switch(btn.playbackMode) {
-                        case 'Da Capo': newPlaybackMode = PlaybackMode.Restart; break;
-                        case 'Continua': newPlaybackMode = PlaybackMode.Continue; break;
-                        case 'Accoda': newPlaybackMode = PlaybackMode.Queue; break;
-                        case 'Loop': // Old loop-only mode
-                            newPlaybackMode = PlaybackMode.Restart;
-                            btn.isLoop = true;
-                            break;
-                    }
-                    return {
-                        ...getDefaultButtonConfig(rest.id),
-                        ...rest,
-                        name: rest.name || getDefaultButtonConfig(rest.id).name,
-                        playbackMode: newPlaybackMode,
-                        isLoop: btn.isLoop || btn.playbackMode === 'Loop',
-                        crossfade: btn.crossfade || false,
-                    };
-                });
-                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(parsedConfig));
-            }
+          if (needsMigration) {
+            console.warn("Old configuration format detected. Migrating to new format.");
+            alert(t('migration_alert'));
+            parsedConfig = parsedConfig.map((btn: any) => {
+              const { audioSrc, ...rest } = btn;
+              let newPlaybackMode = btn.playbackMode;
+              switch (btn.playbackMode) {
+                case 'Da Capo': newPlaybackMode = PlaybackMode.Restart; break;
+                case 'Continua': newPlaybackMode = PlaybackMode.Continue; break;
+                case 'Accoda': newPlaybackMode = PlaybackMode.Queue; break;
+                case 'Loop': // Old loop-only mode
+                  newPlaybackMode = PlaybackMode.Restart;
+                  btn.isLoop = true;
+                  break;
+              }
+              return {
+                ...getDefaultButtonConfig(rest.id),
+                ...rest,
+                name: rest.name || getDefaultButtonConfig(rest.id).name,
+                playbackMode: newPlaybackMode,
+                isLoop: btn.isLoop || btn.playbackMode === 'Loop',
+                crossfade: btn.crossfade || false,
+              };
+            });
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(parsedConfig));
+          }
         }
 
         if (parsedConfig.length !== TOTAL_BUTTONS) {
-            const defaultButtons = Array.from({ length: TOTAL_BUTTONS }, (_, i) => getDefaultButtonConfig(i));
-            setButtonsInitial(defaultButtons);
+          const defaultButtons = Array.from({ length: TOTAL_BUTTONS }, (_, i) => getDefaultButtonConfig(i));
+          setButtonsInitial(defaultButtons);
         } else {
-            setButtonsInitial(parsedConfig);
+          setButtonsInitial(parsedConfig);
         }
       } catch (e) {
         console.error("Failed to parse saved config:", e);
@@ -161,7 +161,7 @@ const App: React.FC = () => {
       const handler = setTimeout(() => {
         try {
           // Filter out audioSrc before saving to avoid quota issues if migration failed
-          const configToSave = buttons.map(({...rest }) => rest);
+          const configToSave = buttons.map(({ ...rest }) => rest);
           localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(configToSave));
         } catch (e) {
           console.error("Failed to save configuration to localStorage:", e);
@@ -222,7 +222,7 @@ const App: React.FC = () => {
 
   const handleRemoveAudio = (id: number) => {
     database.deleteAudio(id).catch(e => console.error("Failed to delete audio from IndexedDB:", e));
-    setButtons(prev => prev.map(b => b.id === id ? {...b, fileName: null} : b));
+    setButtons(prev => prev.map(b => b.id === id ? { ...b, fileName: null } : b));
   };
 
   const handleClearButton = (id: number) => {
@@ -274,74 +274,74 @@ const App: React.FC = () => {
       <header className={`${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'} p-4 text-center shadow-lg`} role="banner">
         <h1 className="text-2xl font-bold text-cyan-400">{t('app_title')}</h1>
         <div className="flex items-center justify-center space-x-1 sm:space-x-2 md:space-x-4 mt-3 overflow-x-auto px-2">
-            <button
-              onClick={undo}
-              disabled={!canUndo}
-              className="bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-2 sm:px-4 rounded-lg flex items-center transition-opacity disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px] touch-manipulation"
-              aria-label={t('undo_button')}
-              title={t('undo_button')}
-            >
-              <UndoIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-            <button
-                onClick={handleStopAll}
-                className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 sm:px-6 rounded-lg transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-red-500 min-h-[44px] touch-manipulation"
-            >
-                <span className="hidden sm:inline">{t('stop_all_audio')}</span>
-                <span className="sm:hidden">STOP</span>
-            </button>
-              <button
-              onClick={redo}
-              disabled={!canRedo}
-              className="bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-2 sm:px-4 rounded-lg flex items-center transition-opacity disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px] touch-manipulation"
-              aria-label={t('redo_button')}
-              title={t('redo_button')}
-            >
-              <RedoIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-            <div className="h-6 border-l border-gray-600 mx-2"></div>
-            <button
-              onClick={() => setShowGlobalSettings(true)}
-              className="bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-opacity"
-              aria-label={t('global_settings_title')}
-              title={t('global_settings_title')}
-            >
-              <SettingsIcon className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => setPlaylistMode(!playlistMode)}
-              className={`font-semibold py-2 px-4 rounded-lg flex items-center transition-opacity ${playlistMode ? 'bg-cyan-600 hover:bg-cyan-500' : 'bg-gray-600 hover:bg-gray-500'}`}
-              aria-label={t('label_playlist_mode')}
-              title={t('label_playlist_mode')}
-            >
-              <PlaylistIcon className="w-5 h-5" />
-            </button>
-            <button
-              onClick={toggleTheme}
-              className="bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-opacity"
-              aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-              title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-            >
-              {theme === 'dark' ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
-            </button>
-            <div className="h-6 border-l border-gray-600 mx-2"></div>
-            <button
-              onClick={handleSaveConfig}
-              className="bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-opacity"
-              aria-label={t('save_config_button')}
-              title={t('save_config_button')}
-            >
-              <DownloadIcon className="w-5 h-5" />
-            </button>
-              <button
-              onClick={handleLoadClick}
-              className="bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-opacity"
-              aria-label={t('load_config_button')}
-              title={t('load_config_button')}
-            >
-              <UploadIcon className="w-5 h-5" />
-            </button>
-            <input type="file" ref={fileInputRef} onChange={handleFileChange} accept=".json" className="hidden" />
+          <button
+            onClick={undo}
+            disabled={!canUndo}
+            className="bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-2 sm:px-4 rounded-lg flex items-center transition-opacity disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px] touch-manipulation"
+            aria-label={t('undo_button')}
+            title={t('undo_button')}
+          >
+            <UndoIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+          </button>
+          <button
+            onClick={handleStopAll}
+            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 sm:px-6 rounded-lg transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-red-500 min-h-[44px] touch-manipulation"
+          >
+            <span className="hidden sm:inline">{t('stop_all_audio')}</span>
+            <span className="sm:hidden">STOP</span>
+          </button>
+          <button
+            onClick={redo}
+            disabled={!canRedo}
+            className="bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-2 sm:px-4 rounded-lg flex items-center transition-opacity disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] min-w-[44px] touch-manipulation"
+            aria-label={t('redo_button')}
+            title={t('redo_button')}
+          >
+            <RedoIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+          </button>
+          <div className="h-6 border-l border-gray-600 mx-2"></div>
+          <button
+            onClick={() => setShowGlobalSettings(true)}
+            className="bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-opacity"
+            aria-label={t('global_settings_title')}
+            title={t('global_settings_title')}
+          >
+            <SettingsIcon className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => setPlaylistMode(!playlistMode)}
+            className={`font-semibold py-2 px-4 rounded-lg flex items-center transition-opacity ${playlistMode ? 'bg-cyan-600 hover:bg-cyan-500' : 'bg-gray-600 hover:bg-gray-500'}`}
+            aria-label={t('label_playlist_mode')}
+            title={t('label_playlist_mode')}
+          >
+            <PlaylistIcon className="w-5 h-5" />
+          </button>
+          <button
+            onClick={toggleTheme}
+            className="bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-opacity"
+            aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+            title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+          >
+            {theme === 'dark' ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
+          </button>
+          <div className="h-6 border-l border-gray-600 mx-2"></div>
+          <button
+            onClick={handleSaveConfig}
+            className="bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-opacity"
+            aria-label={t('save_config_button')}
+            title={t('save_config_button')}
+          >
+            <DownloadIcon className="w-5 h-5" />
+          </button>
+          <button
+            onClick={handleLoadClick}
+            className="bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-opacity"
+            aria-label={t('load_config_button')}
+            title={t('load_config_button')}
+          >
+            <UploadIcon className="w-5 h-5" />
+          </button>
+          <input type="file" ref={fileInputRef} onChange={handleFileChange} accept=".json" className="hidden" />
         </div>
         <div className="max-w-xs mx-auto mt-4 flex items-center space-x-3 text-gray-300">
           <VolumeUpIcon className="w-6 h-6" />
