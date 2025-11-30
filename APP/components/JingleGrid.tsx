@@ -38,8 +38,10 @@ const JingleGrid: React.FC<JingleGridProps> = ({
   onFileDrop,
   isTalkoverActive
 }) => {
+
+
   return (
-    <div className="p-2 sm:p-4 grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-11 gap-2 sm:gap-3 bg-gray-900">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-4 p-2 sm:p-4 pb-24 sm:pb-4 overflow-y-auto">
       {buttons.map(button => {
         const isPlaying = mainTrackId === button.id || overlayTrackIds.includes(button.id) || fadingOutTrackIds.includes(button.id);
         const isPaused = pausedTrackId === button.id;

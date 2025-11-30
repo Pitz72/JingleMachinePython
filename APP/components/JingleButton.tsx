@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ButtonConfig, PlaybackMode } from '../types';
 import { LoopIcon, QueueIcon, OverlayIcon, ContinueIcon, MusicNoteIcon, CheckCircleIcon } from './icons';
 import { useAudioEngine } from '../hooks/useAudioEngine';
@@ -106,15 +106,35 @@ const JingleButton: React.FC<JingleButtonProps> = ({
     return label;
   };
 
+  // Define handlePlay to be used by both click and MIDI listener
+  const handlePlay = () => {
+    if (hasAudio) {
+      onClick(config.id);
+    } else {
+      onSettings(config.id); // If no audio, left-click opens settings
+    }
+  };
+
+  // MIDI Listener
+  useEffect(() => {
+    const handleMidiTrigger = (e: CustomEvent) => {
+      // Assuming config.id is 0-based index or we map it somehow.
+      // If config.id matches the MIDI index
+      if (e.detail.index === config.id) {
+        if (e.detail.type === 'down') {
+          handlePlay();
+        }
+        // Handle 'up' for momentary mode if implemented later
+      }
+    };
+
+    window.addEventListener('midi-trigger' as any, handleMidiTrigger);
+    return () => window.removeEventListener('midi-trigger' as any, handleMidiTrigger);
+  }, [config.id, handlePlay]);
+
   return (
     <div
-      onClick={() => {
-        if (hasAudio) {
-          onClick(config.id);
-        } else {
-          onSettings(config.id); // If no audio, left-click opens settings
-        }
-      }}
+      onClick={handlePlay}
       onContextMenu={handleContextMenu}
       onDragOver={handleDragOver}
       onDrop={handleDrop}

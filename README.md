@@ -66,6 +66,88 @@ RuntimeRadioLiveMachine/
 - **Memory Usage**: Leak prevention attivo
 - **Accessibility**: 95% WCAG compliance
 - **PWA Score**: 100% Lighthouse
+# Runtime Radio Live Machine Pro v1.3.0
+
+**Runtime Radio Live Machine Pro** è una cartigliera digitale (soundboard) professionale progettata per emittenti radiofoniche, podcaster e streamer.
+Nata come evoluzione della "Jingle Machine", questa versione **Pro** offre un'architettura ibrida Web/Desktop (Electron) per massime performance e stabilità.
+
+## 🚀 Funzionalità Principali (v1.3.0)
+
+*   **Audio Engine Ibrido:** Streaming diretto da disco (Electron) o caricamento in memoria (Web).
+*   **MIDI Support:** Controllo fisico tramite controller MIDI (Launchpad, nanoKONTROL, ecc.).
+*   **Internal Recorder:** Registrazione diretta dell'output Master in alta qualità (.webm).
+*   **Advanced Audio Routing:** Selezione della scheda audio di output specifica.
+*   **Visual Waveforms:** Visualizzazione della forma d'onda audio su ogni pulsante, generata in background.
+*   **Auto-Ducking (Talkover):** Attenuazione automatica della musica quando si attivano canali microfono/voce.
+
+### 🎨 **Sistema Temi**
+- ✅ Modalità scura e chiara
+- ✅ Rilevamento preferenze sistema
+- ✅ Transizioni fluide tra temi
+- ✅ Salvataggio preferenze utente
+
+### 📱 **Design Mobile-First**
+- ✅ Layout responsive adattivo
+- ✅ Touch targets ottimizzati (44px min)
+- ✅ Scrolling orizzontale intelligente
+- ✅ Supporto gesture touch
+
+### ♿ **Accessibilità Completa**
+- ✅ Conformità WCAG 2.1 AA
+- ✅ Screen reader support completo
+- ✅ Navigazione keyboard totale
+- ✅ Focus management intelligente
+
+## 📖 **Documentazione**
+
+### 📚 **Indice Completo**
+📖 **[Documentazione Organizzata](documentazione/INDICE.md)** - Indice completo di tutta la documentazione
+
+### 🎯 **Guide Utente**
+- 📱 **[Mini Guida](documentazione/guide/MINI_GUIDE.txt)** - Guida rapida italiano con nuove funzionalità v1.1.0
+- 🔧 **[Documentazione Tecnica](WEB/README.md)** - Setup, architettura e API complete
+
+### 📋 **Changelog & Testing**
+- 📈 **[Changelog](documentazione/changelog/CHANGELOG.md)** - Storico versioni dettagliato
+- 🧪 **[Test Anti-Regressione](documentazione/anti-regressione/ANTI_REGRESSION_TESTS.md)** - Suite test completa v1.1.0
+
+## 🛠️ **Installazione Rapida**
+
+### Prerequisiti
+- **Audio**: Web Audio API + MIDI API
+- **State**: React Hooks + Context API
+- **Storage**: IndexedDB + localStorage
+- **Build**: Vite + Code Splitting
+
+### Struttura Progetto
+```
+RuntimeRadioLiveMachine/
+├── documentazione/           # 📚 Documentazione organizzata
+│   ├── INDICE.md            # Indice completo
+│   ├── changelog/           # 📋 Changelog versioni
+│   ├── anti-regressione/    # 🧪 Test suite
+│   ├── guide/              # 📖 Guide utente
+│   ├── api/                # 🔧 API reference
+│   ├── deployment/         # 🚀 Guide deployment
+│   └── contributing/       # 🤝 Contributing
+├── WEB/                     # 🎵 Applicazione principale
+│   ├── src/
+│   │   ├── components/      # Componenti React
+│   │   ├── contexts/        # Context providers
+│   │   ├── hooks/          # Custom hooks
+|---------|---------|--------|-----|------|
+| Chrome | 90+ | ✅ Full | ✅ | ✅ |
+| Firefox | 88+ | ✅ Full | ✅ | ✅ |
+| Safari | 14+ | ✅ Full | ✅ | ⚠️ Limitato |
+| Edge | 90+ | ✅ Full | ✅ | ✅ |
+
+## 📊 **Metriche Performance**
+
+- **Bundle Size**: 622KB (gzip: 115KB)
+- **Load Time**: <500ms con Vite
+- **Memory Usage**: Leak prevention attivo
+- **Accessibility**: 95% WCAG compliance
+- **PWA Score**: 100% Lighthouse
 
 ## 🤝 **Contributing**
 
@@ -108,5 +190,3 @@ Questo progetto è distribuito sotto licenza **MIT**. Vedi [LICENSE](LICENSE) pe
 📱 **Mobile-first** con touch optimization
 ♿ **Accessibilità** WCAG 2.1 AA completa
 🎛️ **9 preset** professionali invece di 5
-
-**Runtime Radio Live Machine v1.1.0** - Produzione audio professionale nel browser! 🚀

@@ -1,7 +1,7 @@
 {
   "name": "runtime-radio-live-machine-pro",
   "private": true,
-  "version": "1.2.1",
+  "version": "1.3.0",
   "main": "electron/dist/main.js",
   "type": "module",
   "scripts": {

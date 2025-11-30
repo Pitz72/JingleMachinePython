@@ -4,6 +4,9 @@ import { TOTAL_BUTTONS, LOCAL_STORAGE_KEY, PRESET_TEMPLATES, AUTO_SAVE_DELAY } f
 import GlobalSettingsDialog from './components/GlobalSettingsDialog';
 import { SettingsIcon, PlaylistIcon } from './components/icons';
 import JingleGrid from './components/JingleGrid';
+import AudioEngine from './services/AudioEngine';
+import MIDIManager from './services/MIDIManager';
+import RecorderControl from './components/RecorderControl';
 import SettingsDialog from './components/SettingsDialog';
 import WelcomeDialog from './components/WelcomeDialog';
 import { LanguageSelectionDialog } from './components/LanguageSelectionDialog';
