@@ -1,7 +1,7 @@
 {
   "name": "runtime-radio-live-machine-pro",
   "private": true,
-  "version": "1.4.0",
+  "version": "1.4.1",
   "main": "electron/dist/main.js",
   "type": "module",
   "scripts": {
@@ -58,7 +58,7 @@
     "appId": "com.runtimeradio.livemachinepro",
     "productName": "Runtime Radio Live Machine Pro",
     "directories": {
-      "output": "dist_electron_v1.3.1"
+      "output": "dist_electron"
     },
     "files": [
       "dist/**/*",

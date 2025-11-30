@@ -17,19 +17,21 @@ function createWindow() {
         width: 1280,
         height: 720,
         useContentSize: true, // Ensure the content area matches the aspect ratio
-        icon: path.join(__dirname, '../../assets/icon.png'), // Set the window icon
+        icon: path.join(__dirname, '../../dist/favicon.ico'), // Use .ico for better Windows compatibility
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false, // For now, to simplify migration. In Phase 2 we will secure this.
             webSecurity: false, // Allow local file access for audio
         },
         title: "Runtime Radio Live Machine Pro",
-        backgroundColor: '#111827',
+        backgroundColor: '#09090b', // Match Zinc-950
         show: false, // Don't show until ready
+        autoHideMenuBar: true, // Hide menu bar for native feel
     });
 
     // Enforce 16:9 Aspect Ratio
     mainWindow.setAspectRatio(16 / 9);
+    mainWindow.setMenuBarVisibility(false); // Explicitly hide menu bar
 
     if (isDev) {
         mainWindow.loadURL('http://localhost:5173');
@@ -43,8 +45,7 @@ function createWindow() {
             console.error('Failed to load index.html:', e);
         });
 
-        // TEMPORARY: Open DevTools in production to debug crash
-        mainWindow.webContents.openDevTools();
+        // DevTools removed for production
     }
 
     mainWindow.once('ready-to-show', () => {

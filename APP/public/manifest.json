@@ -2,7 +2,7 @@
   "name": "Runtime Radio Live Machine",
   "short_name": "RRLM",
   "description": "Professional web-based audio console for radio, podcast, and live event production",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#111827",

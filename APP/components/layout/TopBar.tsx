@@ -11,6 +11,8 @@ interface TopBarProps {
     onPlaylistModeChange: (mode: boolean) => void;
     onSaveConfig: () => void;
     onLoadConfig: () => void;
+    onLoadPreset: (index: number) => void;
+    presets: { name: string; config: any[] }[];
 }
 
 const TopBar: React.FC<TopBarProps> = ({
@@ -21,7 +23,9 @@ const TopBar: React.FC<TopBarProps> = ({
     playlistMode,
     onPlaylistModeChange,
     onSaveConfig,
-    onLoadConfig
+    onLoadConfig,
+    onLoadPreset,
+    presets
 }) => {
     const { t } = useTranslations();
 
@@ -43,6 +47,18 @@ const TopBar: React.FC<TopBarProps> = ({
                 >
                     <PlaylistIcon className="w-5 h-5" />
                 </button>
+
+                {/* Presets */}
+                <select
+                    onChange={(e) => onLoadPreset(parseInt(e.target.value))}
+                    className="bg-zinc-800 text-zinc-400 text-sm rounded-lg border-none focus:ring-1 focus:ring-cyan-500 py-1.5 px-3 mr-2"
+                    defaultValue=""
+                >
+                    <option value="" disabled>{t('select_preset')}</option>
+                    {presets.map((preset, index) => (
+                        <option key={index} value={index}>{preset.name}</option>
+                    ))}
+                </select>
 
                 <div className="h-6 w-px bg-zinc-700 mx-2" />
 

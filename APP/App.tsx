@@ -351,8 +351,22 @@ const App: React.FC = () => {
         onSettingsClick={() => setShowGlobalSettings(true)}
         playlistMode={playlistMode}
         onPlaylistModeChange={setPlaylistMode}
-        onSaveConfig={handleSaveConfig}
+        onSaveConfig={() => {
+          // Custom Save Logic for .rrlm
+          const configToSave = buttons.map(({ ...rest }) => rest);
+          const blob = new Blob([JSON.stringify(configToSave)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `config_${new Date().toISOString().slice(0, 10)}.rrlm`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }}
         onLoadConfig={handleLoadClick}
+        onLoadPreset={handleLoadPreset}
+        presets={PRESET_TEMPLATES}
       />
 
       <MainGrid>
@@ -392,7 +406,7 @@ const App: React.FC = () => {
       />
 
       {/* Hidden File Input */}
-      <input type="file" ref={fileInputRef} onChange={handleFileChange} accept=".json" className="hidden" />
+      <input type="file" ref={fileInputRef} onChange={handleFileChange} accept=".json,.rrlm" className="hidden" />
 
       {/* Dialogs */}
       {editingButton && (
