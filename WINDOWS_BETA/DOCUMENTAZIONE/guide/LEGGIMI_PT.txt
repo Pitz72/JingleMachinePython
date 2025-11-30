@@ -1,0 +1,46 @@
+================================================================================
+          RUNTIME RADIO LIVE MACHINE PRO - v1.3.1
+================================================================================
+
+Obrigado por descarregar o Runtime Radio Live Machine Pro.
+
+Esta aplicação é uma "Cartwall Digital" profissional, desenhada para realizadores
+de rádio, podcasters e streamers que necessitam de lançar ativos de áudio (jingles,
+efeitos, bases) com latência zero durante transmissões ao vivo.
+
+--------------------------------------------------------------------------------
+O QUE É E O QUE FAZ?
+--------------------------------------------------------------------------------
+Ao contrário de um leitor de música padrão, este software é otimizado para:
+1. VELOCIDADE: Os sons começam no instante exato em que pressiona o botão.
+2. FIABILIDADE: Funciona offline e guarda tudo localmente.
+3. CONTROLO: Suporta teclados MIDI externos para uma sensação "física".
+
+--------------------------------------------------------------------------------
+CARACTERÍSTICAS PRINCIPAIS
+--------------------------------------------------------------------------------
+* 88 PADS PROGRAMÁVEIS: Uma grelha 8x11 totalmente personalizável.
+* ARRASTAR E LARGAR: Arraste os seus ficheiros MP3/WAV diretamente para as teclas.
+* INTEGRAÇÃO MIDI: Ligue o seu controlador (ex. Launchpad, Korg NanoPad) e
+  use a função "MIDI Learn" para atribuir sons a teclas físicas.
+* MODOS DE REPRODUÇÃO AVANÇADOS:
+  - Restart: Reinicia o som do início (ideal para efeitos).
+  - Continue: Pausa/Retomar (ideal para bases e voz).
+  - Overlay: Sobrepõe o mesmo som (ideal para bateria/efeitos rápidos).
+* INTERFACE PRO: Temas escuros para não cansar a vista no estúdio.
+
+--------------------------------------------------------------------------------
+INSTALAÇÃO E ARRANQUE
+--------------------------------------------------------------------------------
+Não requer instalação complexa.
+1. Extraia todo o conteúdo do ZIP para uma pasta à sua escolha.
+2. Execute o ficheiro "Runtime Radio Live Machine Pro.exe".
+3. No primeiro arranque, a aplicação estará vazia. Comece por arrastar ficheiros de áudio!
+
+--------------------------------------------------------------------------------
+SUPORTE
+--------------------------------------------------------------------------------
+Para reportar bugs ou solicitar funcionalidades, visite a página GitHub do projeto.
+
+Boa emissão!
+A Equipa Runtime Radio

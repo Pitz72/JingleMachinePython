@@ -43,8 +43,8 @@ Il percorso per "Runtime Radio Live Machine Pro":
     *   Implementare Drag & Drop nativo (tramite Electron).
 
 3.  **Fase 3: Visual & Workflow**
-    *   Aggiungere Waveform sui tasti (o in un pannello ispettore).
-    *   Implementare Ducking automatico.
+    *   **Visualizers:** Implementare VU Meter stereo e forme d'onda visive per feedback immediato.
+    *   Implementare Ducking automatico (Talkover).
 
 ## Conclusione
 Non serve cambiare tecnologia. Serve sfruttare Electron per rompere i limiti del browser (accesso file system, driver audio) e curare l'UX per renderla indistinguibile da un'app nativa.
