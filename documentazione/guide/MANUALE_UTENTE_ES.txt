@@ -1,0 +1,105 @@
+================================================================================
+          MANUAL DE USUARIO - RUNTIME RADIO LIVE MACHINE PRO
+================================================================================
+Versión del Documento: 1.0 (Ref. App v1.3.1)
+
+ÍNDICE
+1. Resumen de la Interfaz
+2. Cargar y Gestionar Sonidos
+3. Ajustes del Botón
+4. Integración MIDI
+5. Ajustes Globales
+6. Atajos de Teclado
+
+--------------------------------------------------------------------------------
+1. RESUMEN DE LA INTERFAZ
+--------------------------------------------------------------------------------
+La interfaz se divide en tres áreas principales:
+- CABECERA (Arriba): Controles globales, Volumen Maestro, Stop All (Botón de Pánico).
+- CUADRÍCULA (Centro): 88 botones (Pads) organizados en filas y columnas.
+- BARRA LATERAL (Derecha - Móvil/Responsive): Acceso rápido a ajustes.
+
+Cada botón tiene:
+- Nombre del archivo/jingle.
+- Barra de progreso (visible durante la reproducción).
+- Indicador de estado (color pulsante en reproducción).
+
+--------------------------------------------------------------------------------
+2. CARGAR Y GESTIONAR SONIDOS
+--------------------------------------------------------------------------------
+MÉTODO ARRASTRAR Y SOLTAR (Recomendado):
+1. Abre la carpeta con tus archivos de audio (MP3, WAV, OGG).
+2. Arrastra un archivo directamente sobre un botón gris (vacío) o coloreado.
+3. El botón se configurará automáticamente con el nombre del archivo.
+
+MÉTODO MANUAL:
+1. CLIC DERECHO en un botón.
+2. Se abrirá el panel "Ajustes del Botón".
+3. Haz clic en "Elegir Archivo" y selecciona el archivo de tu computadora.
+
+BORRAR UN SONIDO:
+- Clic Derecho > Haz clic en el icono de papelera o "Eliminar Audio".
+
+--------------------------------------------------------------------------------
+3. AJUSTES DEL BOTÓN
+--------------------------------------------------------------------------------
+Haciendo CLIC DERECHO en un pad, accedes a sus propiedades avanzadas:
+
+- COLOR: Elige un color para agrupar visualmente los sonidos.
+- VOLUMEN: Ajusta el volumen específico de ese sonido único.
+- MODO DE REPRODUCCIÓN (Playback Mode):
+  * RESTART (Por defecto): Si se presiona mientras suena, reinicia desde el principio.
+  * CONTINUE: Si se presiona mientras suena, Pausa. Si se presiona de nuevo, Reanuda.
+  * OVERLAY: Puedes presionar varias veces y los sonidos se superponen.
+  * QUEUE: Pone el sonido en cola después del actual (experimental).
+- LOOP: Si está activo, el sonido se repite infinitamente hasta que lo detengas.
+- FADE IN/OUT: Establece una duración de fundido de entrada o salida (en milisegundos).
+
+--------------------------------------------------------------------------------
+4. INTEGRACIÓN MIDI (Nuevo en v1.3)
+--------------------------------------------------------------------------------
+Puedes usar controladores USB (ej. Novation Launchpad, Korg NanoKONTROL) para controlar la app.
+
+CÓMO CONECTAR:
+1. Conecta el dispositivo USB al PC antes de iniciar la app.
+2. La app debería mostrar una notificación "Dispositivo MIDI Conectado".
+
+MIDI LEARN (Aprendizaje Automático):
+1. Haz clic en "Ajustes" (icono de engranaje arriba a la derecha).
+2. Activa el interruptor "Modo MIDI Learn".
+3. Los botones se resaltarán.
+4. Haz clic con el ratón en el botón que quieres mapear.
+5. Presiona la tecla física en tu controlador.
+6. ¡Hecho! La conexión está guardada.
+7. Desactiva "Modo MIDI Learn" para volver a tocar.
+
+MAPEO ESTÁNDAR:
+Por defecto, la app escucha notas MIDI desde C1 (Nota 36) en adelante.
+El Control Change (CC) número 7 controla el Volumen Maestro.
+
+--------------------------------------------------------------------------------
+5. AJUSTES GLOBALES
+--------------------------------------------------------------------------------
+Desde el menú de engranaje arriba a la derecha:
+- IMPORTAR/EXPORTAR CONFIGURACIÓN: Guarda todo tu set en un archivo .JSON.
+  NOTA: Los archivos de audio no se incluyen en el JSON.
+- TEMA: Cambia entre Claro y Oscuro.
+
+--------------------------------------------------------------------------------
+6. ATAJOS DE TECLADO
+--------------------------------------------------------------------------------
+- ESC: Stop All (Detiene todo el audio inmediatamente).
+- BARRA ESPACIADORA: (Reservada para uso futuro).
+- TECLAS NÚMEROS / LETRAS: Algunas teclas están pre-mapeadas.
+  (Se recomienda el uso de MIDI para control profesional).
+
+--------------------------------------------------------------------------------
+SOLUCIÓN DE PROBLEMAS
+--------------------------------------------------------------------------------
+- "No escucho nada": Comprueba que el Volumen Maestro no esté a cero.
+- "La app es lenta": Evita cargar archivos WAV enormes en demasiadas teclas.
+- "Reinicio Total": Si la app se congela, puedes borrar datos de navegación, pero perderás la configuración. ¡Haz siempre copias de seguridad JSON!
+
+================================================================================
+(C) 2025 Runtime Radio - Proyecto de Código Abierto
+================================================================================
