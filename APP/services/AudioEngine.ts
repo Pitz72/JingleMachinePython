@@ -23,6 +23,12 @@ class AudioEngine {
     private recordedChunks: Blob[] = [];
     private isRecording: boolean = false;
 
+    // Microphone
+    private micSource: MediaStreamAudioSourceNode | null = null;
+    private micGain: GainNode | null = null;
+    private micStream: MediaStream | null = null;
+    private isMicMonitoring: boolean = false;
+
     private constructor() { }
 
     public static getInstance(): AudioEngine {
@@ -50,6 +56,12 @@ class AudioEngine {
 
             // Connect Master to Recorder as well
             this.compressor.connect(this.recorderDestination);
+
+            // Microphone Gain Node
+            this.micGain = this.context.createGain();
+            this.micGain.gain.value = 0; // Start muted
+            // Route Mic to Recorder (Always)
+            this.micGain.connect(this.recorderDestination);
 
             // Compressor Settings (Limiter-like)
             this.compressor.threshold.value = -1;
@@ -274,6 +286,81 @@ class AudioEngine {
 
     public getIsRecording(): boolean {
         return this.isRecording;
+    }
+
+    // Microphone Methods
+    public async startMicrophone(deviceId: string) {
+        const ctx = this.getContext();
+        try {
+            if (this.micStream) {
+                this.stopMicrophone();
+            }
+
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: {
+                    deviceId: { exact: deviceId },
+                    echoCancellation: false,
+                    noiseSuppression: false,
+                    autoGainControl: false
+                }
+            });
+
+            this.micStream = stream;
+            this.micSource = ctx.createMediaStreamSource(stream);
+
+            if (this.micGain) {
+                this.micSource.connect(this.micGain);
+            }
+
+            console.log(`Microphone started: ${deviceId}`);
+        } catch (err) {
+            console.error("Failed to start microphone:", err);
+            throw err;
+        }
+    }
+
+    public stopMicrophone() {
+        if (this.micSource) {
+            this.micSource.disconnect();
+            this.micSource = null;
+        }
+        if (this.micStream) {
+            this.micStream.getTracks().forEach(track => track.stop());
+            this.micStream = null;
+        }
+    }
+
+    public setMicrophoneVolume(volume: number) {
+        const ctx = this.getContext();
+        if (this.micGain) {
+            this.micGain.gain.setTargetAtTime(volume, ctx.currentTime, 0.01);
+        }
+    }
+
+    public setMicrophoneMonitoring(enabled: boolean) {
+        this.isMicMonitoring = enabled;
+        if (!this.micGain || !this.masterGain) return;
+
+        if (enabled) {
+            // Connect Mic to Master (Monitor)
+            this.micGain.connect(this.masterGain);
+        } else {
+            try {
+                // Disconnect Mic from Master
+                this.micGain.disconnect(this.masterGain);
+            } catch (e) {
+                // Ignore if not connected
+            }
+            // Ensure Mic is still connected to Recorder
+            if (this.recorderDestination) {
+                // Re-connect to recorder if disconnect removed all connections
+                // Note: disconnect() without args removes ALL connections. 
+                // It's safer to disconnect specific destination if supported, 
+                // but Web Audio API disconnect(destination) is standard now.
+                // However, to be safe, we'll just reconnect to recorder.
+                this.micGain.connect(this.recorderDestination);
+            }
+        }
     }
 }
 

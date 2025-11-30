@@ -43,7 +43,7 @@ const JingleGrid: React.FC<JingleGridProps> = ({
 
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-4 p-2 sm:p-4 pb-24 sm:pb-4 overflow-y-auto">
+    <div className="grid grid-cols-11 grid-rows-8 gap-2 w-full h-full">
       {buttons.map(button => {
         const isPlaying = mainTrackId === button.id || overlayTrackIds.includes(button.id) || fadingOutTrackIds.includes(button.id);
         const isPaused = pausedTrackId === button.id;

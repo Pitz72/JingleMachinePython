@@ -14,8 +14,10 @@ function createWindow() {
     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
     mainWindow = new BrowserWindow({
-        width: Math.round(width * 0.9),
-        height: Math.round(height * 0.9),
+        width: 1280,
+        height: 720,
+        useContentSize: true, // Ensure the content area matches the aspect ratio
+        icon: path.join(__dirname, '../../assets/icon.png'), // Set the window icon
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false, // For now, to simplify migration. In Phase 2 we will secure this.
@@ -25,6 +27,9 @@ function createWindow() {
         backgroundColor: '#111827',
         show: false, // Don't show until ready
     });
+
+    // Enforce 16:9 Aspect Ratio
+    mainWindow.setAspectRatio(16 / 9);
 
     if (isDev) {
         mainWindow.loadURL('http://localhost:5173');
