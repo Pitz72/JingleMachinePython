@@ -53,37 +53,6 @@ RuntimeRadioLiveMachine/
 │   │   ├── components/      # Componenti React
 │   │   ├── contexts/        # Context providers
 │   │   ├── hooks/          # Custom hooks
-│   │   └── i18n/           # Traduzioni 8 lingue
-│   ├── public/             # Asset PWA
-│   └── dist/               # Build produzione
-└── README.md               # Questo file
-```
-
-## 🎯 **Use Cases**
-
-### 📻 **Radio Broadcasting**
-- Console audio live per trasmissioni radio
-- Mixing real-time con EQ e dinamica
-- Code management per sequenze automatizzate
-
-### 🎙️ **Podcast Production**
-- Multi-track audio management
-- Voice enhancement integrato
-- Libreria effetti sonori
-
-### 🎪 **Eventi Live**
-- DJ mixing con crossfader e cue
-- Controllo audio eventi
-- Emergency broadcast capabilities
-
-### 🎵 **Produzione Musicale**
-- Sound design creativo
-- Effetti real-time processing
-- Strumento performance con controllo MIDI
-
-## 🌐 **Browser Support**
-
-| Browser | Version | Status | PWA | MIDI |
 |---------|---------|--------|-----|------|
 | Chrome | 90+ | ✅ Full | ✅ | ✅ |
 | Firefox | 88+ | ✅ Full | ✅ | ✅ |

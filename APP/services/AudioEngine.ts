@@ -14,7 +14,14 @@ class AudioEngine {
     private static instance: AudioEngine;
     private context: AudioContext | null = null;
     private masterGain: GainNode | null = null;
+    private compressor: DynamicsCompressorNode | null = null;
     private channels: Map<number, ChannelNodes> = new Map();
+
+    // Recorder
+    private recorderDestination: MediaStreamAudioDestinationNode | null = null;
+    private mediaRecorder: MediaRecorder | null = null;
+    private recordedChunks: Blob[] = [];
+    private isRecording: boolean = false;
 
     private constructor() { }
 
@@ -27,9 +34,29 @@ class AudioEngine {
 
     public getContext(): AudioContext {
         if (!this.context) {
-            this.context = new (window.AudioContext || (window as any).webkitAudioContext)();
+            const AudioContextClass = (window.AudioContext || (window as any).webkitAudioContext);
+            this.context = new AudioContextClass();
+
+            // Master Chain: MasterGain -> Compressor -> Destination
             this.masterGain = this.context.createGain();
-            this.masterGain.connect(this.context.destination);
+            this.compressor = this.context.createDynamicsCompressor();
+
+            // Recorder Destination (sidechain from MasterGain)
+            this.recorderDestination = this.context.createMediaStreamDestination();
+
+            // Wiring
+            this.masterGain.connect(this.compressor);
+            this.compressor.connect(this.context.destination);
+
+            // Connect Master to Recorder as well
+            this.compressor.connect(this.recorderDestination);
+
+            // Compressor Settings (Limiter-like)
+            this.compressor.threshold.value = -1;
+            this.compressor.knee.value = 10;
+            this.compressor.ratio.value = 20;
+            this.compressor.attack.value = 0.005;
+            this.compressor.release.value = 0.050;
         }
         if (this.context.state === 'suspended') {
             this.context.resume();
@@ -141,21 +168,7 @@ class AudioEngine {
     }
 
     public applyDucking(active: boolean) {
-        const ctx = this.getContext();
-        const now = ctx.currentTime;
-        const DUCKED_VOLUME = 0.2; // -14dB approx
-
-        this.channels.forEach((nodes, id) => {
-            // We need to know if this channel is a talkover channel to avoid ducking it
-            // But we don't store config in nodes. 
-            // We will rely on the caller to update individual channel volumes or 
-            // we can store a "isTalkover" flag in the nodes if we refactor.
-
-            // For now, let's implement a global ducking state in AudioEngine 
-            // and re-apply it in updateChannelSettings?
-            // Better: The React layer (useAudioPlayback) knows which buttons are playing.
-            // It should call updateChannelSettings with a lower volume multiplier for music.
-        });
+        // Placeholder for future global ducking logic if needed
     }
 
     public async setSinkId(deviceId: string) {
@@ -211,6 +224,56 @@ class AudioEngine {
             console.error("Error generating waveform:", error);
             return [];
         }
+    }
+
+    // Recorder Methods
+    public startRecording(): boolean {
+        if (this.isRecording || !this.recorderDestination) return false;
+
+        try {
+            const stream = this.recorderDestination.stream;
+            // Prefer high bitrate Opus or PCM if available (WebM container)
+            const options = { mimeType: 'audio/webm;codecs=opus', audioBitsPerSecond: 256000 };
+
+            this.mediaRecorder = new MediaRecorder(stream, options);
+            this.recordedChunks = [];
+
+            this.mediaRecorder.ondataavailable = (e) => {
+                if (e.data.size > 0) {
+                    this.recordedChunks.push(e.data);
+                }
+            };
+
+            this.mediaRecorder.start();
+            this.isRecording = true;
+            console.log("Recording started");
+            return true;
+        } catch (e) {
+            console.error("Failed to start recording:", e);
+            return false;
+        }
+    }
+
+    public async stopRecording(): Promise<Blob | null> {
+        if (!this.isRecording || !this.mediaRecorder) return null;
+
+        return new Promise((resolve) => {
+            if (!this.mediaRecorder) return resolve(null);
+
+            this.mediaRecorder.onstop = () => {
+                const blob = new Blob(this.recordedChunks, { type: 'audio/webm' });
+                this.recordedChunks = [];
+                this.isRecording = false;
+                console.log("Recording stopped, blob size:", blob.size);
+                resolve(blob);
+            };
+
+            this.mediaRecorder.stop();
+        });
+    }
+
+    public getIsRecording(): boolean {
+        return this.isRecording;
     }
 }
 
