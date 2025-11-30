@@ -17,6 +17,7 @@ interface JingleButtonProps {
   isSoloActive: boolean;
   onFileDrop: (id: number, file: File) => void;
   isTalkoverActive: boolean;
+  isMidiLearnMode: boolean;
 }
 
 const JingleButton: React.FC<JingleButtonProps> = ({
@@ -32,7 +33,8 @@ const JingleButton: React.FC<JingleButtonProps> = ({
   masterVolume,
   isSoloActive,
   onFileDrop,
-  isTalkoverActive
+  isTalkoverActive,
+  isMidiLearnMode
 }) => {
   const { audioRef, progress } = useAudioEngine({
     config,
@@ -107,7 +109,16 @@ const JingleButton: React.FC<JingleButtonProps> = ({
   };
 
   // Define handlePlay to be used by both click and MIDI listener
-  const handlePlay = () => {
+  const handlePlay = async () => {
+    if (isMidiLearnMode) {
+      // Import dynamically to avoid circular dependency if possible, or just use global
+      const MIDIManager = (await import('../services/MIDIManager')).default;
+      MIDIManager.getInstance().prepareToLearn(config.id);
+      // Visual feedback could be handled by local state or toast
+      alert(`Waiting for MIDI Note for Button ${config.id + 1}... Press a key on your controller.`);
+      return;
+    }
+
     if (hasAudio) {
       onClick(config.id);
     } else {

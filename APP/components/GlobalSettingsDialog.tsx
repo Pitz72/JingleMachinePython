@@ -11,6 +11,8 @@ interface GlobalSettingsDialogProps {
   playlistMode: boolean;
   onPlaylistModeChange: (enabled: boolean) => void;
   onMidiTrigger?: (buttonId: number) => void;
+  isMidiLearnMode?: boolean;
+  onMidiLearnModeChange?: (active: boolean) => void;
 }
 
 const GlobalSettingsDialog: React.FC<GlobalSettingsDialogProps> = ({
@@ -20,6 +22,8 @@ const GlobalSettingsDialog: React.FC<GlobalSettingsDialogProps> = ({
   playlistMode,
   onPlaylistModeChange,
   onMidiTrigger,
+  isMidiLearnMode = false,
+  onMidiLearnModeChange,
 }) => {
   const { t } = useTranslations();
   const { isMidiSupported, connectedDevices, requestMidiAccess } = useMidi(onMidiTrigger || (() => { }));
@@ -93,6 +97,44 @@ const GlobalSettingsDialog: React.FC<GlobalSettingsDialogProps> = ({
             {connectedDevices.length > 0 && (
               <div className="text-xs text-gray-400">
                 Connected: {connectedDevices.map(d => d.name).join(', ')}
+              </div>
+            )}
+
+            {/* MIDI Learn Controls */}
+            {isMidiSupported && (
+              <div className="mt-2 p-3 bg-gray-700 rounded-lg border border-gray-600">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-white">MIDI Mapping</span>
+                  <div className="flex items-center space-x-2">
+                    <span className={`text-xs ${isMidiLearnMode ? 'text-green-400 animate-pulse' : 'text-gray-400'}`}>
+                      {isMidiLearnMode ? 'LEARNING MODE ACTIVE' : 'Normal Mode'}
+                    </span>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="sr-only peer"
+                        checked={isMidiLearnMode}
+                        onChange={(e) => onMidiLearnModeChange && onMidiLearnModeChange(e.target.checked)}
+                      />
+                      <div className="w-9 h-5 bg-gray-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-purple-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-purple-600"></div>
+                    </label>
+                  </div>
+                </div>
+                <div className="text-xs text-gray-400 mb-2">
+                  {isMidiLearnMode
+                    ? "Click a Jingle Button, then press a key on your MIDI controller."
+                    : "Enable 'Learn Mode' to map buttons to your controller."}
+                </div>
+                <button
+                  onClick={async () => {
+                    const MIDIManager = (await import('../services/MIDIManager')).default;
+                    MIDIManager.getInstance().clearMapping();
+                    alert("MIDI Mappings Cleared!");
+                  }}
+                  className="w-full py-1 text-xs bg-red-900 hover:bg-red-800 text-red-100 rounded border border-red-700 transition-colors"
+                >
+                  Clear All Mappings
+                </button>
               </div>
             )}
           </div>

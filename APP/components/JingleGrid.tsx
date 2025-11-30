@@ -20,6 +20,7 @@ interface JingleGridProps {
   isSoloActive: boolean;
   onFileDrop: (id: number, file: File) => void;
   isTalkoverActive: boolean;
+  isMidiLearnMode: boolean;
 }
 
 const JingleGrid: React.FC<JingleGridProps> = ({
@@ -36,7 +37,8 @@ const JingleGrid: React.FC<JingleGridProps> = ({
   masterVolume,
   isSoloActive,
   onFileDrop,
-  isTalkoverActive
+  isTalkoverActive,
+  isMidiLearnMode
 }) => {
 
 
@@ -65,6 +67,7 @@ const JingleGrid: React.FC<JingleGridProps> = ({
             isSoloActive={isSoloActive}
             onFileDrop={onFileDrop}
             isTalkoverActive={isTalkoverActive}
+            isMidiLearnMode={isMidiLearnMode}
           />
         );
       })}

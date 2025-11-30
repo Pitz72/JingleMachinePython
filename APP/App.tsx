@@ -62,6 +62,13 @@ const App: React.FC = () => {
   }, [handleLoadConfig, setButtonsInitial, setMasterVolume]);
 
   const [showGlobalSettings, setShowGlobalSettings] = useState(false);
+  const [isMidiLearnMode, setIsMidiLearnMode] = useState(false);
+
+  // Sync MIDI Learn Mode
+  const toggleMidiLearnMode = (active: boolean) => {
+    setIsMidiLearnMode(active);
+    MIDIManager.getInstance().setLearnMode(active);
+  };
 
   // Button settings handlers
   const handleButtonSettings = (id: number) => {
@@ -454,6 +461,7 @@ const App: React.FC = () => {
               fadingOutTrackIds.includes(b.id)
             )
           )}
+          isMidiLearnMode={isMidiLearnMode}
         />
       </main>
       {editingButton && (
@@ -473,6 +481,8 @@ const App: React.FC = () => {
           playlistMode={playlistMode}
           onPlaylistModeChange={setPlaylistMode}
           onMidiTrigger={handleButtonClickForGrid}
+          isMidiLearnMode={isMidiLearnMode}
+          onMidiLearnModeChange={toggleMidiLearnMode}
         />
       )}
     </div>

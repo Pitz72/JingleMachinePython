@@ -6,7 +6,16 @@ class MIDIManager {
     private inputs: Map<string, MIDIInput> = new Map();
     private isInitialized: boolean = false;
 
-    private constructor() { }
+    // Mapping: Note Number -> Button ID
+    private midiMapping: Map<number, number> = new Map();
+
+    // Learn Mode State
+    private isLearnMode: boolean = false;
+    private pendingButtonId: number | null = null;
+
+    private constructor() {
+        this.loadMapping();
+    }
 
     public static getInstance(): MIDIManager {
         if (!MIDIManager.instance) {
@@ -56,12 +65,7 @@ class MIDIManager {
     private handleMIDIMessage(event: MIDIMessageEvent) {
         const [command, note, velocity] = event.data;
 
-        // Simple mapping for now:
-        // Note On (144-159) -> Trigger Button
-        // Control Change (176-191) -> Volume/Fader
-
         const cmd = command & 0xf0; // Mask channel
-        const channel = command & 0x0f;
 
         if (cmd === 144 && velocity > 0) {
             // Note On
@@ -76,23 +80,44 @@ class MIDIManager {
     }
 
     private handleNoteOn(note: number, velocity: number) {
-        // Map notes to button IDs (e.g., C1 = 36 -> Button 0)
-        // Let's assume a linear mapping for now starting from C1 (36)
-        const buttonIndex = note - 36;
-        if (buttonIndex >= 0 && buttonIndex < 24) { // Assuming 24 buttons
-            // We need a way to trigger the button in React.
-            // Dispatching a custom event that the App or Grid can listen to.
+        if (this.isLearnMode && this.pendingButtonId !== null) {
+            // Learn Mapping
+            this.midiMapping.set(note, this.pendingButtonId);
+            this.saveMapping();
+            console.log(`Mapped Note ${note} to Button ${this.pendingButtonId}`);
+
+            // Notify UI that learning is done for this button
+            window.dispatchEvent(new CustomEvent('midi-learn-complete', {
+                detail: { note, buttonId: this.pendingButtonId }
+            }));
+
+            this.pendingButtonId = null;
+            return;
+        }
+
+        // Normal Operation
+        const buttonIndex = this.midiMapping.get(note);
+
+        // Fallback to default linear mapping if no custom mapping exists
+        // Default: C1 (36) -> Button 0
+        const effectiveButtonIndex = buttonIndex !== undefined ? buttonIndex : (note - 36);
+
+        if (effectiveButtonIndex >= 0 && effectiveButtonIndex < 24) {
             window.dispatchEvent(new CustomEvent('midi-trigger', {
-                detail: { index: buttonIndex, type: 'down', velocity }
+                detail: { index: effectiveButtonIndex, type: 'down', velocity }
             }));
         }
     }
 
     private handleNoteOff(note: number) {
-        const buttonIndex = note - 36;
-        if (buttonIndex >= 0 && buttonIndex < 24) {
+        if (this.isLearnMode) return;
+
+        const buttonIndex = this.midiMapping.get(note);
+        const effectiveButtonIndex = buttonIndex !== undefined ? buttonIndex : (note - 36);
+
+        if (effectiveButtonIndex >= 0 && effectiveButtonIndex < 24) {
             window.dispatchEvent(new CustomEvent('midi-trigger', {
-                detail: { index: buttonIndex, type: 'up' }
+                detail: { index: effectiveButtonIndex, type: 'up' }
             }));
         }
     }
@@ -107,6 +132,48 @@ class MIDIManager {
                 detail: { cc, value: volume }
             }));
         }
+    }
+
+    // Learn Mode API
+    public setLearnMode(active: boolean) {
+        this.isLearnMode = active;
+        this.pendingButtonId = null;
+        console.log(`MIDI Learn Mode: ${active ? 'ON' : 'OFF'}`);
+    }
+
+    public prepareToLearn(buttonId: number) {
+        if (!this.isLearnMode) return;
+        this.pendingButtonId = buttonId;
+        console.log(`Waiting for MIDI Note for Button ${buttonId}...`);
+    }
+
+    public getIsLearnMode(): boolean {
+        return this.isLearnMode;
+    }
+
+    // Persistence
+    private saveMapping() {
+        const mappingObj = Object.fromEntries(this.midiMapping);
+        localStorage.setItem('midi_mapping', JSON.stringify(mappingObj));
+    }
+
+    private loadMapping() {
+        const saved = localStorage.getItem('midi_mapping');
+        if (saved) {
+            try {
+                const mappingObj = JSON.parse(saved);
+                this.midiMapping = new Map(
+                    Object.entries(mappingObj).map(([k, v]) => [Number(k), Number(v)])
+                );
+            } catch (e) {
+                console.error("Failed to load MIDI mapping", e);
+            }
+        }
+    }
+
+    public clearMapping() {
+        this.midiMapping.clear();
+        this.saveMapping();
     }
 }
 
