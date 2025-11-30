@@ -58,7 +58,7 @@
     "appId": "com.runtimeradio.livemachinepro",
     "productName": "Runtime Radio Live Machine Pro",
     "directories": {
-      "output": "dist_electron_v1.3.0"
+      "output": "dist_electron_v1.3.1"
     },
     "files": [
       "dist/**/*",

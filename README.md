@@ -1,177 +1,90 @@
-### 🎨 **Sistema Temi**
-- ✅ Modalità scura e chiara
-- ✅ Rilevamento preferenze sistema
-- ✅ Transizioni fluide tra temi
-- ✅ Salvataggio preferenze utente
+# 📻 Runtime Radio Live Machine Pro
+> *Ex "JingleMachinePython"*
 
-### 📱 **Design Mobile-First**
-- ✅ Layout responsive adattivo
-- ✅ Touch targets ottimizzati (44px min)
-- ✅ Scrolling orizzontale intelligente
-- ✅ Supporto gesture touch
+![Version](https://img.shields.io/badge/version-1.3.1-blue.svg)
+![Tech](https://img.shields.io/badge/tech-React_19_|_Electron_|_TypeScript-61DAFB.svg)
+![Status](https://img.shields.io/badge/status-Production_Ready-success.svg)
 
-### ♿ **Accessibilità Completa**
-- ✅ Conformità WCAG 2.1 AA
-- ✅ Screen reader support completo
-- ✅ Navigazione keyboard totale
-- ✅ Focus management intelligente
+**La cartigliera digitale professionale per il broadcast radiofonico e lo streaming live.**
 
-## 📖 **Documentazione**
+---
 
-### 📚 **Indice Completo**
-📖 **[Documentazione Organizzata](documentazione/INDICE.md)** - Indice completo di tutta la documentazione
+## 📖 Introduzione: Che cos'è?
 
-### 🎯 **Guide Utente**
-- 📱 **[Mini Guida](documentazione/guide/MINI_GUIDE.txt)** - Guida rapida italiano con nuove funzionalità v1.1.0
-- 🔧 **[Documentazione Tecnica](WEB/README.md)** - Setup, architettura e API complete
+**Runtime Radio Live Machine Pro** è un software di **Cartwall** (cartigliera audio) progettato per registi radiofonici, podcaster e streamer. Permette di riprodurre jingle, effetti sonori, basi e contributi audio istantanei con latenza zero, fondamentale per la diretta.
 
-### 📋 **Changelog & Testing**
-- 📈 **[Changelog](documentazione/changelog/CHANGELOG.md)** - Storico versioni dettagliato
-- 🧪 **[Test Anti-Regressione](documentazione/anti-regressione/ANTI_REGRESSION_TESTS.md)** - Suite test completa v1.1.0
+Nato inizialmente come esperimento in Python (da cui il nome legacy del repository), il progetto si è evoluto in una **Progressive Web App (PWA)** moderna e performante, incapsulata in **Electron** per garantire l'integrazione nativa con il sistema operativo.
 
-## 🛠️ **Installazione Rapida**
+### ⚡ Perché è diversa?
+A differenza dei player musicali standard, questa "macchina" è ottimizzata per:
+*   **Latenza Zero:** Utilizza la Web Audio API per un trigger istantaneo dei suoni.
+*   **Affidabilità:** Architettura React 19 robusta con gestione errori avanzata.
+*   **Controllo Fisico:** Integrazione MIDI bidirezionale per usare controller hardware reali.
 
-### Prerequisiti
-- **Audio**: Web Audio API + MIDI API
-- **State**: React Hooks + Context API
-- **Storage**: IndexedDB + localStorage
-- **Build**: Vite + Code Splitting
+---
 
-### Struttura Progetto
-```
-RuntimeRadioLiveMachine/
-├── documentazione/           # 📚 Documentazione organizzata
-│   ├── INDICE.md            # Indice completo
-│   ├── changelog/           # 📋 Changelog versioni
-│   ├── anti-regressione/    # 🧪 Test suite
-│   ├── guide/              # 📖 Guide utente
-│   ├── api/                # 🔧 API reference
-│   ├── deployment/         # 🚀 Guide deployment
-│   └── contributing/       # 🤝 Contributing
-├── WEB/                     # 🎵 Applicazione principale
-│   ├── src/
-│   │   ├── components/      # Componenti React
-│   │   ├── contexts/        # Context providers
-│   │   ├── hooks/          # Custom hooks
-|---------|---------|--------|-----|------|
-| Chrome | 90+ | ✅ Full | ✅ | ✅ |
-| Firefox | 88+ | ✅ Full | ✅ | ✅ |
-| Safari | 14+ | ✅ Full | ✅ | ⚠️ Limitato |
-| Edge | 90+ | ✅ Full | ✅ | ✅ |
+## 🛠️ Caratteristiche Principali
 
-## 📊 **Metriche Performance**
+### 🎛️ Motore Audio & Interfaccia
+*   **88 Pad Programmabili:** Griglia 8x11 completamente personalizzabile.
+*   **Gestione Volumi Indipendente:** Volume per singolo pad + Master generale.
+*   **Modalità Loop & Fade:** Configurazione granulare per ogni traccia (Loop, Fade-In, Fade-Out).
+*   **Drag & Drop:** Caricamento file intuitivo (supporto MP3, WAV, OGG).
+*   **Temi Visivi:** Supporto nativo per Dark Mode e temi ad alto contrasto per studi bui.
 
-- **Bundle Size**: 622KB (gzip: 115KB)
-- **Load Time**: <500ms con Vite
-- **Memory Usage**: Leak prevention attivo
-- **Accessibility**: 95% WCAG compliance
-- **PWA Score**: 100% Lighthouse
-# Runtime Radio Live Machine Pro v1.3.1
-- ✅ Rilevamento preferenze sistema
-- ✅ Transizioni fluide tra temi
-- ✅ Salvataggio preferenze utente
+### 🎹 Integrazione Hardware (Novità v1.3)
+Il nuovo **MIDIManager** trasforma l'app in uno strumento fisico:
+*   **Plug & Play:** Riconoscimento automatico dei controller MIDI USB.
+*   **MIDI Learn:** Assegna qualsiasi pad fisico a un jingle cliccando "Impara MIDI".
+*   **Feedback Visivo:** I pad su schermo si illuminano quando premi i tasti fisici.
+*   **Controllo Fader:** Usa i fader del tuo controller per gestire il volume Master (CC 7).
 
-### 📱 **Design Mobile-First**
-- ✅ Layout responsive adattivo
-- ✅ Touch targets ottimizzati (44px min)
-- ✅ Scrolling orizzontale intelligente
-- ✅ Supporto gesture touch
+### 💻 Tecnologia "Sotto il Cofano"
+*   **Core:** React 19 + TypeScript + Vite.
+*   **Desktop:** Electron (per build Windows .exe).
+*   **Storage:** IndexedDB (via `idb`) per salvare configurazioni e file audio localmente nel browser/app senza database esterni.
+*   **Testing:** Suite di test automatizzati con Vitest per prevenire regressioni.
 
-### ♿ **Accessibilità Completa**
-- ✅ Conformità WCAG 2.1 AA
-- ✅ Screen reader support completo
-- ✅ Navigazione keyboard totale
-- ✅ Focus management intelligente
+---
 
-## 📖 **Documentazione**
+## 🚀 Per Iniziare
 
-### 📚 **Indice Completo**
-📖 **[Documentazione Organizzata](documentazione/INDICE.md)** - Indice completo di tutta la documentazione
+### Requisiti
+*   Node.js (v18 o superiore)
+*   npm
 
-### 🎯 **Guide Utente**
-- 📱 **[Mini Guida](documentazione/guide/MINI_GUIDE.txt)** - Guida rapida italiano con nuove funzionalità v1.1.0
-- 🔧 **[Documentazione Tecnica](WEB/README.md)** - Setup, architettura e API complete
+### Installazione e Avvio (Sviluppo)
 
-### 📋 **Changelog & Testing**
-- 📈 **[Changelog](documentazione/changelog/CHANGELOG.md)** - Storico versioni dettagliato
-- 🧪 **[Test Anti-Regressione](documentazione/anti-regressione/ANTI_REGRESSION_TESTS.md)** - Suite test completa v1.1.0
+1.  **Clona il repository:**
+    ```bash
+    git clone https://github.com/Utente/JingleMachinePython.git
+    cd JingleMachinePython
+    ```
 
-## 🛠️ **Installazione Rapida**
+2.  **Installa le dipendenze:**
+    ```bash
+    npm install
+    ```
 
-### Prerequisiti
-- **Audio**: Web Audio API + MIDI API
-- **State**: React Hooks + Context API
-- **Storage**: IndexedDB + localStorage
-- **Build**: Vite + Code Splitting
+3.  **Avvia in modalità Web (Browser):**
+    ```bash
+    npm run dev
+    ```
+    *L'app sarà accessibile su `http://localhost:5173`*
 
-### Struttura Progetto
-```
-RuntimeRadioLiveMachine/
-├── documentazione/           # 📚 Documentazione organizzata
-│   ├── INDICE.md            # Indice completo
-│   ├── changelog/           # 📋 Changelog versioni
-│   ├── anti-regressione/    # 🧪 Test suite
-│   ├── guide/              # 📖 Guide utente
-│   ├── api/                # 🔧 API reference
-│   ├── deployment/         # 🚀 Guide deployment
-│   └── contributing/       # 🤝 Contributing
-├── WEB/                     # 🎵 Applicazione principale
-│   ├── src/
-│   │   ├── components/      # Componenti React
-│   │   ├── contexts/        # Context providers
-│   │   ├── hooks/          # Custom hooks
-|---------|---------|--------|-----|------|
-| Chrome | 90+ | ✅ Full | ✅ | ✅ |
-| Firefox | 88+ | ✅ Full | ✅ | ✅ |
-| Safari | 14+ | ✅ Full | ✅ | ⚠️ Limitato |
-| Edge | 90+ | ✅ Full | ✅ | ✅ |
+4.  **Avvia in modalità Desktop (Electron):**
+    ```bash
+    npm run electron
+    ```
 
-## 📊 **Metriche Performance**
+---
 
-- **Bundle Size**: 622KB (gzip: 115KB)
-- **Load Time**: <500ms con Vite
-- **Memory Usage**: Leak prevention attivo
-- **Accessibility**: 95% WCAG compliance
-- **PWA Score**: 100% Lighthouse
+## 📚 Documentazione Completa
 
-## 🤝 **Contributing**
+La documentazione dettagliata del progetto è disponibile nella cartella `documentazione`.
 
-Benvenuti contributi! Consulta:
-- **[Linee Guida Contributing](documentazione/contributing/)** - In sviluppo
-- **[Processo Code Review](documentazione/contributing/)** - In sviluppo
-- **[Standard Coding](documentazione/contributing/)** - In sviluppo
+*   **[INDICE GENERALE](documentazione/INDICE.md)**: Il punto di partenza per esplorare tutta la documentazione.
+*   **[Analisi Strategica](documentazione/ANALISI_STRATEGICA.md)**: Visione del prodotto e roadmap.
+---
 
-### Setup Sviluppo
-```bash
-# Installa dipendenze
-npm install
-
-# Avvia dev server
-npm run dev
-
-# Testing
-npm run test
-npm run test:ui
-
-# Linting
-npm run lint
-npm run format
-
-# Build produzione
-npm run build
-```
-
-## 📄 **Licenza**
-
-Questo progetto è distribuito sotto licenza **MIT**. Vedi [LICENSE](LICENSE) per dettagli.
-
-## 🙏 **Ringraziamenti**
-
-- **Concept Originale**: Simone Pizzi (Runtime Radio)
-- **Sviluppo**: AI-assisted con oversight umano
-✨ **PWA completa** con installazione nativa
-🎹 **MIDI integration** per controller hardware
-🎨 **Sistema temi** scuri/chiari dinamici
-📱 **Mobile-first** con touch optimization
-♿ **Accessibilità** WCAG 2.1 AA completa
-🎛️ **9 preset** professionali invece di 5
+> **Nota:** Sebbene il repository si chiami `JingleMachinePython`, **non contiene codice Python**. È un'applicazione 100% TypeScript/React. Il nome è mantenuto per continuità storica.
