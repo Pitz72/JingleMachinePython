@@ -165,19 +165,6 @@ Questo progetto è distribuito sotto licenza **MIT**. Vedi [LICENSE](LICENSE) pe
 
 - **Concept Originale**: Simone Pizzi (Runtime Radio)
 - **Sviluppo**: AI-assisted con oversight umano
-- **Testing**: Beta testers e early adopters
-- **Community**: Contributi open source
-
-## 📞 **Supporto**
-
-- 🐛 **[Issues](https://github.com/yourusername/runtime-radio-live-machine/issues)** - Segnala bug
-- 💬 **[Discussions](https://github.com/yourusername/runtime-radio-live-machine/discussions)** - Domande generali
-- 📚 **[Documentazione](documentazione/INDICE.md)** - Guide complete
-
----
-
-## 🎉 **Novità v1.1.0**
-
 ✨ **PWA completa** con installazione nativa
 🎹 **MIDI integration** per controller hardware
 🎨 **Sistema temi** scuri/chiari dinamici
