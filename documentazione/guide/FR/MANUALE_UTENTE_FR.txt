@@ -1,0 +1,105 @@
+================================================================================
+          MANUEL UTILISATEUR - RUNTIME RADIO LIVE MACHINE PRO
+================================================================================
+Version du Document : 1.0 (Réf. App v1.4.1 Public Beta)
+
+INDEX
+1. Aperçu de l'Interface
+2. Chargement et Gestion des Sons
+3. Paramètres du Bouton
+4. Intégration MIDI
+5. Paramètres Globaux
+6. Raccourcis Clavier
+
+--------------------------------------------------------------------------------
+1. APERÇU DE L'INTERFACE
+--------------------------------------------------------------------------------
+L'interface est divisée en trois zones principales :
+- EN-TÊTE (Haut) : Contrôles globaux, Volume Principal, Stop All (Bouton Panique).
+- GRILLE (Centre) : 88 boutons (Pads) organisés en lignes et colonnes.
+- BARRE LATÉRALE (Droite - Mobile/Responsive) : Accès rapide aux paramètres.
+
+Chaque bouton possède :
+- Nom du fichier/jingle.
+- Barre de progression (visible pendant la lecture).
+- Indicateur d'état (couleur pulsante en lecture).
+
+--------------------------------------------------------------------------------
+2. CHARGEMENT ET GESTION DES SONS
+--------------------------------------------------------------------------------
+MÉTHODE GLISSER-DÉPOSER (Recommandée) :
+1. Ouvrez le dossier avec vos fichiers audio (MP3, WAV, OGG).
+2. Glissez un fichier directement sur un bouton gris (vide) ou coloré.
+3. Le bouton se configurera automatiquement avec le nom du fichier.
+
+MÉTHODE MANUELLE :
+1. CLIC DROIT sur un bouton.
+2. Le panneau "Paramètres du Bouton" s'ouvrira.
+3. Cliquez sur "Choisir un fichier" et sélectionnez le fichier sur votre ordinateur.
+
+SUPPRIMER UN SON :
+- Clic Droit > Cliquez sur l'icône corbeille ou "Supprimer l'audio".
+
+--------------------------------------------------------------------------------
+3. PARAMÈTRES DU BOUTON
+--------------------------------------------------------------------------------
+En faisant un CLIC DROIT sur un pad, vous accédez à ses propriétés avancées :
+
+- COULEUR : Choisissez une couleur pour grouper visuellement les sons (ex. Rouge pour Jingles, Vert pour Tapis).
+- VOLUME : Ajustez le volume spécifique de ce son unique (utile si un fichier est trop bas/fort).
+- MODE DE LECTURE (Playback Mode) :
+  * RESTART (Défaut) : Si pressé pendant la lecture, redémarre du début. (Effets, Jingles rapides).
+  * CONTINUE : Si pressé pendant la lecture, met en Pause. Si repressé, Reprend. (Tapis, Podcasts).
+  * OVERLAY : Vous pouvez appuyer plusieurs fois et les sons se superposent. (Applaudissements, Tirs).
+  * QUEUE : Met le son en file d'attente après l'actuel (expérimental).
+- LOOP : Si actif, le son se répète indéfiniment jusqu'à ce que vous l'arrêtiez.
+- FADE IN/OUT : Définit une durée de fondu en entrée ou sortie (en millisecondes).
+
+--------------------------------------------------------------------------------
+4. INTÉGRATION MIDI (Nouveau v1.3)
+--------------------------------------------------------------------------------
+Vous pouvez utiliser des contrôleurs USB (ex. Novation Launchpad, Korg NanoKONTROL, Claviers musicaux) pour piloter l'app.
+
+COMMENT CONNECTER :
+1. Connectez l'appareil USB au PC avant de lancer l'app (ou rechargez la page avec CTRL+R).
+2. L'app devrait afficher une notification "Dispositif MIDI Connecté".
+
+MIDI LEARN (Apprentissage Automatique) :
+1. Cliquez sur "Paramètres" (icône engrenage en haut à droite).
+2. Activez l'interrupteur "Mode MIDI Learn".
+3. Les boutons deviendront surbrillants.
+4. Cliquez avec la souris sur le bouton que vous voulez mapper (ex. le premier en haut à gauche).
+5. Appuyez sur la touche physique de votre contrôleur.
+6. Fait ! La connexion est enregistrée.
+7. Désactivez le "Mode MIDI Learn" pour revenir au jeu.
+
+MAPPAGE STANDARD :
+Par défaut, l'app écoute les notes MIDI à partir de C1 (Note 36), mappant les touches séquentiellement.
+Le Control Change (CC) numéro 7 contrôle le Volume Principal.
+
+--------------------------------------------------------------------------------
+5. PARAMÈTRES GLOBAUX
+--------------------------------------------------------------------------------
+Depuis le menu engrenage en haut à droite :
+- IMPORTER/EXPORTER CONFIGURATION : Sauvegardez tout votre set (couleurs, volumes, assignations) dans un fichier .JSON pour sauvegarde ou transfert.
+  NOTE : Les fichiers audio ne sont pas inclus dans le JSON, seulement les paramètres.
+- THÈME : Basculez entre Clair et Sombre.
+
+--------------------------------------------------------------------------------
+6. RACCOURCIS CLAVIER
+--------------------------------------------------------------------------------
+- ESC : Stop All (Arrête tout l'audio immédiatement).
+- BARRE ESPACE : (Réservé pour usage futur, actuellement focus).
+- TOUCHES CHIFFRES / LETTRES : Certaines touches sont pré-mappées pour les premières lignes (A,Z,E,R...).
+  (L'utilisation du MIDI est recommandée pour un contrôle professionnel).
+
+--------------------------------------------------------------------------------
+DÉPANNAGE
+--------------------------------------------------------------------------------
+- "Je n'entends rien" : Vérifiez que le Volume Principal (en haut) n'est pas à zéro et que le périphérique audio Windows est correct.
+- "L'app est lente" : Évitez de charger d'énormes fichiers WAV (ex. enregistrements d'1 heure) sur trop de touches. Utilisez MP3 pour les fichiers longs.
+- "Réinitialisation Totale" : Si l'app gèle, vous pouvez effacer les données de navigation/cache, mais vous perdrez la configuration. Faites toujours des sauvegardes JSON !
+
+================================================================================
+(C) 2025 Runtime Radio - Projet Open Source
+================================================================================

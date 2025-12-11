@@ -1,0 +1,105 @@
+================================================================================
+          BENUTZERHANDBUCH - RUNTIME RADIO LIVE MACHINE PRO
+================================================================================
+Dokumentversion: 1.0 (Ref. App v1.4.1 Public Beta)
+
+INDEX
+1. Übersicht der Benutzeroberfläche
+2. Laden und Verwalten von Sounds
+3. Tasteneinstellungen
+4. MIDI-Integration
+5. Globale Einstellungen
+6. Tastaturkürzel
+
+--------------------------------------------------------------------------------
+1. ÜBERSICHT DER BENUTZEROBERFLÄCHE
+--------------------------------------------------------------------------------
+Die Oberfläche ist in drei Hauptbereiche unterteilt:
+- HEADER (Oben): Globale Steuerelemente, Master-Lautstärke, Stop All (Panik-Taste).
+- RASTER (Mitte): 88 Tasten (Pads), organisiert in Zeilen und Spalten.
+- SEITENLEISTE (Rechts - Mobil/Responsive): Schneller Zugriff auf Einstellungen.
+
+Jede Taste hat:
+- Datei-/Jingle-Name.
+- Fortschrittsbalken (sichtbar während der Wiedergabe).
+- Statusanzeige (pulsierende Farbe bei Wiedergabe).
+
+--------------------------------------------------------------------------------
+2. LADEN UND VERWALTEN VON SOUNDS
+--------------------------------------------------------------------------------
+DRAG & DROP METHODE (Empfohlen):
+1. Öffnen Sie den Ordner mit Ihren Audiodateien (MP3, WAV, OGG).
+2. Ziehen Sie eine Datei direkt auf eine graue (leere) oder farbige Taste.
+3. Die Taste konfiguriert sich automatisch mit dem Dateinamen.
+
+MANUELLE METHODE:
+1. RECHTSKLICK auf eine Taste.
+2. Das Bedienfeld "Tasteneinstellungen" öffnet sich.
+3. Klicken Sie auf "Datei auswählen" und wählen Sie die Datei von Ihrem Computer.
+
+EINEN SOUND LÖSCHEN:
+- Rechtsklick > Klicken Sie auf das Papierkorb-Symbol oder "Audio entfernen".
+
+--------------------------------------------------------------------------------
+3. TASTENEINSTELLUNGEN
+--------------------------------------------------------------------------------
+Durch RECHTSKLICK auf ein Pad greifen Sie auf dessen erweiterte Eigenschaften zu:
+
+- FARBE: Wählen Sie eine Farbe, um Sounds visuell zu gruppieren (z.B. Rot für Jingles, Grün für Betten).
+- LAUTSTÄRKE: Passen Sie die spezifische Lautstärke dieses einzelnen Sounds an.
+- WIEDERGABEMODUS (Playback Mode):
+  * RESTART (Standard): Wenn während der Wiedergabe gedrückt, Neustart von vorne.
+  * CONTINUE: Wenn während der Wiedergabe gedrückt, Pause. Bei erneutem Drücken, Weiter.
+  * OVERLAY: Sie können mehrmals drücken und Sounds überlagern sich.
+  * QUEUE: Reiht den Sound nach dem aktuellen ein (experimentell).
+- LOOP: Wenn aktiv, wiederholt sich der Sound unendlich, bis Sie ihn stoppen.
+- FADE IN/OUT: Stellen Sie eine Ein- oder Ausblenddauer ein (in Millisekunden).
+
+--------------------------------------------------------------------------------
+4. MIDI-INTEGRATION (Neu in v1.3)
+--------------------------------------------------------------------------------
+Sie können USB-Controller (z.B. Novation Launchpad, Korg NanoKONTROL) verwenden, um die App zu steuern.
+
+VERBINDUNG HERSTELLEN:
+1. Schließen Sie das USB-Gerät an den PC an, bevor Sie die App starten.
+2. Die App sollte eine Benachrichtigung "MIDI-Gerät verbunden" anzeigen.
+
+MIDI LEARN (Automatisches Lernen):
+1. Klicken Sie auf "Einstellungen" (Zahnradsymbol oben rechts).
+2. Aktivieren Sie den Schalter "MIDI Learn Mode".
+3. Tasten werden hervorgehoben.
+4. Klicken Sie mit der Maus auf die Taste, die Sie zuweisen möchten.
+5. Drücken Sie die physische Taste auf Ihrem Controller.
+6. Fertig! Die Verbindung ist gespeichert.
+7. Deaktivieren Sie "MIDI Learn Mode", um zum Spielen zurückzukehren.
+
+STANDARD-MAPPING:
+Standardmäßig hört die App auf MIDI-Noten ab C1 (Note 36) und ordnet Tasten sequenziell zu.
+Control Change (CC) Nummer 7 steuert die Master-Lautstärke.
+
+--------------------------------------------------------------------------------
+5. GLOBALE EINSTELLUNGEN
+--------------------------------------------------------------------------------
+Vom Zahnradmenü oben rechts:
+- KONFIGURATION IMPORTIEREN/EXPORTIEREN: Speichern Sie Ihr gesamtes Set in einer .JSON-Datei für Backups.
+  HINWEIS: Audiodateien sind nicht im JSON enthalten, nur die Einstellungen.
+- THEMA: Wechseln Sie zwischen Hell und Dunkel.
+
+--------------------------------------------------------------------------------
+6. TASTATURKÜRZEL
+--------------------------------------------------------------------------------
+- ESC: Stop All (Stoppt alle Audios sofort).
+- LEERTASTE: (Reserviert für zukünftige Nutzung).
+- ZAHLEN-/BUCHSTABENTASTEN: Einige Tasten sind für die ersten Zeilen vorab zugewiesen.
+  (Die Verwendung von MIDI wird für professionelle Steuerung empfohlen).
+
+--------------------------------------------------------------------------------
+FEHLERBEHEBUNG
+--------------------------------------------------------------------------------
+- "Ich höre nichts": Prüfen Sie, ob die Master-Lautstärke nicht auf Null steht.
+- "Die App ist langsam": Vermeiden Sie das Laden riesiger WAV-Dateien auf zu viele Tasten.
+- "Totaler Reset": Wenn die App einfriert, können Sie Browserdaten löschen, verlieren aber die Konfiguration. Machen Sie immer JSON-Backups!
+
+================================================================================
+(C) 2025 Runtime Radio - Open Source Projekt
+================================================================================

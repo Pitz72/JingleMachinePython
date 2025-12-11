@@ -15,14 +15,14 @@ La documentazione dettagliata del progetto è disponibile nella cartella `docume
 
 > **Nota:** Sebbene il repository si chiami `JingleMachinePython`, **non contiene codice Python**. È un'applicazione 100% TypeScript/React. Il nome è mantenuto per continuità storica.
 
-## Portale di Prodotto (Landing Page)
-Nella cartella `LANDINGPAGE` è disponibile il codice sorgente del sito web ufficiale del progetto.
-Si tratta di un portale moderno realizzato con **React 19, Vite e Tailwind CSS** che include:
-*   **Home:** Presentazione marketing del prodotto.
-*   **Wiki:** Documentazione utente completa e navigabile.
-*   **Tech:** Specifiche tecniche e dettagli architetturali.
+## 🌐 Portale di Prodotto (Sito Web)
+Nella cartella `LANDINGPAGE` è disponibile il codice sorgente del sito web ufficiale.
 
-Per avviare il sito in locale:
+*   **URL Produzione**: `simonepizzi.runtimeradio.it/sw/rlm/`
+*   **Stato**: Pronto per la pubblicazione (v0.0.3).
+*   **Feature**: Include il download diretto della **v1.4.1 Public Beta** e la Wiki completa.
+
+Per avviare il sito in locale (ricorda il path `/sw/rlm/`):
 ```bash
 cd LANDINGPAGE
 npm install
