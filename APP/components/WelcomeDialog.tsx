@@ -38,7 +38,7 @@ const WelcomeDialog: React.FC<WelcomeDialogProps> = ({ onStart }) => {
               onClick={() => setShowFeatures(true)}
               className="bg-gray-700 hover:bg-gray-600 text-cyan-300 font-semibold py-2 px-6 rounded-lg text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 border border-gray-600"
             >
-              🔍 What's New in v1.4.1
+              🔍 What's New in v1.4.1 Public Beta
             </button>
           </div>
         </div>

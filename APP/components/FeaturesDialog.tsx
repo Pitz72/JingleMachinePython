@@ -70,7 +70,7 @@ const FeaturesDialog: React.FC<FeaturesDialogProps> = ({ onClose }) => {
       <div className="bg-gray-800 text-white rounded-lg shadow-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-gray-700" onClick={e => e.stopPropagation()}>
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h2 className="text-3xl font-bold text-cyan-400">Runtime Radio Live Machine v1.4.1</h2>
+            <h2 className="text-3xl font-bold text-cyan-400">Runtime Radio Live Machine v1.4.1 Public Beta</h2>
             <p className="text-lg text-gray-300 mt-1">Premium Desktop Production Suite</p>
           </div>
           <button

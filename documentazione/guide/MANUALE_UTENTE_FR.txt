@@ -1,7 +1,7 @@
 ================================================================================
           MANUEL UTILISATEUR - RUNTIME RADIO LIVE MACHINE PRO
 ================================================================================
-Version du Document : 1.0 (Réf. App v1.3.1)
+Version du Document : 1.0 (Réf. App v1.4.1 Public Beta)
 
 INDEX
 1. Aperçu de l'Interface
