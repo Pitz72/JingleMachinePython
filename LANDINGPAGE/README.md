@@ -31,6 +31,7 @@ L'output sarà generato in `dist/`. Caricare il contenuto di questa cartella in 
 *   **`public`**: Asset statici non processati (Favicon, ZIP Download).
 
 ## 📦 Versioning
+*   **v0.0.4**: Espansione Wiki (FAQ, Settings) e Info Public Beta in Home.
 *   **v0.0.3**: Branding completo, link download attivi, base path `/sw/rlm/`.
 *   **v0.0.2**: Aggiunta Wiki e Tech Specs.
 *   **v0.0.1**: Setup iniziale template.

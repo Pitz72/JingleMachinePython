@@ -19,7 +19,7 @@ La documentazione dettagliata del progetto è disponibile nella cartella `docume
 Nella cartella `LANDINGPAGE` è disponibile il codice sorgente del sito web ufficiale.
 
 *   **URL Produzione**: `simonepizzi.runtimeradio.it/sw/rlm/`
-*   **Stato**: Pronto per la pubblicazione (v0.0.3).
+*   **Stato**: Pronto per la pubblicazione (v0.0.4).
 *   **Feature**: Include il download diretto della **v1.4.1 Public Beta** e la Wiki completa.
 
 Per avviare il sito in locale (ricorda il path `/sw/rlm/`):

@@ -107,6 +107,38 @@ export function Home() {
                 </div>
             </section>
 
+            {/* Public Beta Info */}
+            <section className="py-20 bg-primary/5 border-y border-primary/10">
+                <div className="max-w-4xl mx-auto px-6 text-center">
+                    <div className="inline-block p-3 rounded-full bg-primary/10 mb-6">
+                        <span className="text-3xl">🚧</span>
+                    </div>
+                    <h2 className="text-3xl font-bold mb-6 text-white">Stato del Progetto: Public Beta</h2>
+                    <p className="text-zinc-300 mb-8 leading-relaxed">
+                        L'applicazione è attualmente in fase di <strong>Public Beta</strong> ed è liberamente scaricabile per un periodo di tempo non ancora stabilito.
+                        <br className="hidden md:block" />
+                        Il vostro contributo è fondamentale per rendere Runtime Radio Live Machine sempre più stabile e ricca di funzionalità.
+                    </p>
+
+                    <div className="bg-zinc-900/80 rounded-2xl p-8 border border-white/10 backdrop-blur-sm">
+                        <h3 className="text-xl font-bold mb-4 text-primary">Supporto & Feedback</h3>
+                        <p className="text-zinc-400 mb-6">
+                            Avete riscontrato un bug o avete suggerimenti per nuove feature?
+                            <br />
+                            Il team di sviluppo è a vostra disposizione. Contattateci direttamente:
+                        </p>
+                        <div className="flex flex-col md:flex-row justify-center gap-4 text-white font-medium">
+                            <a href="mailto:runtimeradio@gmail.com" className="flex items-center justify-center gap-2 px-6 py-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors border border-white/5">
+                                ✉️ runtimeradio@gmail.com
+                            </a>
+                            <a href="mailto:pizzisimone1972@gmail.com" className="flex items-center justify-center gap-2 px-6 py-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors border border-white/5">
+                                ✉️ pizzisimone1972@gmail.com
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* CTA Bottom */}
             <section className="py-32 text-center">
                 <h2 className="text-4xl font-bold mb-8">Pronto per andare in onda?</h2>
