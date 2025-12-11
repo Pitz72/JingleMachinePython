@@ -1,9 +1,9 @@
 # 📻 Runtime Radio Live Machine Pro
 > *Ex "JingleMachinePython"*
 
-![Version](https://img.shields.io/badge/version-1.3.1-blue.svg)
+![Version](https://img.shields.io/badge/version-1.4.1-blue.svg)
 ![Tech](https://img.shields.io/badge/tech-React_19_|_Electron_|_TypeScript-61DAFB.svg)
-![Status](https://img.shields.io/badge/status-Production_Ready-success.svg)
+![Status](https://img.shields.io/badge/status-Public_Beta-orange.svg)
 
 **La cartigliera digitale professionale per il broadcast radiofonico e lo streaming live.**
 

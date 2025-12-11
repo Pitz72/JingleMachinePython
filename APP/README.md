@@ -1,21 +1,20 @@
-# Runtime Radio Live Machine v1.1.0
+# Runtime Radio Live Machine v1.4.1 (Public Beta)
 
 <div align="center">
-  <img width="1200" height="475" alt="Runtime Radio Live Machine Banner" src="https://via.placeholder.com/1200x475/1f2937/06b6d4?text=Runtime+Radio+Live+Machine+v1.1.0" />
+  <img width="1200" height="475" alt="Runtime Radio Live Machine Banner" src="https://via.placeholder.com/1200x475/1f2937/06b6d4?text=Runtime+Radio+Live+Machine+v1.4.1" />
 </div>
 
-## 🎵 Professional Progressive Web App for Audio Production
+## 🎵 Professional Desktop Workstation for Audio Production
 
-**Runtime Radio Live Machine v1.1.0** is a cutting-edge, installable web application designed for professional audio production. Featuring PWA capabilities, MIDI integration, dark/light themes, and comprehensive accessibility, it delivers enterprise-grade audio processing with an intuitive, responsive interface for radio hosts, podcasters, DJs, and live event producers.
+**Runtime Radio Live Machine v1.4.1** is a cutting-edge **Public Beta** desktop application designed for professional audio production. Featuring native Electron integration, MIDI support, dark/light themes, and comprehensive accessibility, it delivers enterprise-grade audio processing with an intuitive, responsive interface for radio hosts, podcasters, DJs, and live event producers.
 
 ## ✨ Key Features
 
-### 🌐 **Progressive Web App**
-- **Installable Application**: Native app installation on desktop and mobile
-- **Offline Functionality**: Full operation without internet connection
-- **Service Worker**: Intelligent caching and background sync
-- **App Shortcuts**: Quick access to common functions
-- **Push Notifications**: Update notifications and status alerts
+### 🖥️ **Desktop First Experience**
+- **Native Application**: Fully integrated Electron desktop app
+- **System Integration**: Native file system access and dialogs
+- **High Performance**: Optimized local resource usage
+- **Window Management**: Custom window controls and framing
 
 ### 🎹 **MIDI Integration**
 - **Hardware Control**: Direct integration with MIDI controllers
@@ -30,10 +29,9 @@
 - **High Contrast**: Optimized for accessibility and visibility
 - **Theme Consistency**: All components adapt seamlessly to theme changes
 
-### 📱 **Mobile-First Design**
+### 📱 **Adaptive Design**
 - **Responsive Grid**: Adaptive button layout (6→11 columns based on screen)
-- **Touch Optimization**: 44px minimum touch targets for mobile devices
-- **Horizontal Scrolling**: Compact header navigation on small screens
+- **Touch Optimization**: 44px minimum touch targets
 - **Gesture Support**: Touch and swipe interactions optimized
 
 ### ♿ **Accessibility Excellence**
@@ -79,31 +77,14 @@
 ## 🚀 Quick Start
 
 ### Prerequisites
-- **Node.js** 18+ and **npm**
-- **Modern Web Browser** (Chrome 90+, Firefox 88+, Safari 14+)
+- **Windows/Mac/Linux**
+- **No external dependencies** (Standalone Application)
 
 ### Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/runtime-radio-live-machine.git
-   cd runtime-radio-live-machine
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Start development server**
-   ```bash
-   npm run dev
-   ```
-
-4. **Open in browser**
-   ```
-   http://localhost:5173
-   ```
+1. **Download the Installer** regarding version v1.4.1
+2. **Run the Installer**
+3. **Launch the Application**
 
 ### First Use
 1. **Select Language**: Choose your preferred language from the flag icons
@@ -135,42 +116,31 @@
 ## 🏗️ Architecture
 
 ### Technology Stack
-- **Frontend**: React 19 + TypeScript + Tailwind CSS
-- **PWA Framework**: Vite PWA Plugin with Service Worker
+- **Core**: Electron + React 19 + TypeScript
+- **Styling**: Tailwind CSS
 - **Audio Engine**: Web Audio API with real-time processing + MIDI API
 - **State Management**: React hooks with localStorage + IndexedDB persistence
 - **Theme System**: CSS custom properties with React Context
 - **Build Tool**: Vite with code splitting and optimization
-- **Testing**: Jest + React Testing Library + Playwright
 - **Internationalization**: Custom i18n system with 8 languages
 - **Accessibility**: WCAG 2.1 AA compliant with ARIA support
 
 ### Project Structure
 ```
 runtime-radio-live-machine/
+├── electron/           # Electron main process
 ├── src/
-│   ├── components/          # React components
-│   │   ├── JingleButton.tsx # Individual audio button
-│   │   ├── JingleGrid.tsx   # Button grid layout
-│   │   ├── SettingsDialog.tsx # Button configuration
-│   │   └── GlobalSettingsDialog.tsx # App-wide settings
-│   ├── contexts/            # React contexts
-│   │   └── LanguageContext.tsx # Internationalization
-│   ├── i18n/               # Translation files
-│   │   └── index.ts        # Translation definitions
-│   ├── types.ts            # TypeScript type definitions
-│   ├── constants.ts        # App constants and presets
-│   ├── db.ts               # IndexedDB utilities
-│   ├── hooks.ts            # Custom React hooks
-│   ├── App.tsx             # Main application component
-│   └── main.tsx            # Application entry point
-├── public/                 # Static assets
-├── index.html              # HTML template
-├── package.json            # Dependencies and scripts
-├── CHANGELOG.md            # Version history
-├── ANTI_REGRESSION_TESTS.md # Test suite
-├── MINI_GUIDE.txt          # Quick reference
-└── README.md              # This file
+│   ├── components/     # React components
+│   ├── contexts/       # React contexts
+│   ├── i18n/           # Translation files
+│   ├── services/       # Core services (MIDI, Audio)
+│   ├── types.ts        # TypeScript definitions
+│   ├── constants.ts    # App constants
+│   ├── db.ts           # Storage layer
+│   └── App.tsx         # Main UI
+├── assets/             # Icons and media
+├── package.json        # Dependencies
+└── README.md           # This file
 ```
 
 ## 🎯 Use Cases
@@ -207,64 +177,18 @@ runtime-radio-live-machine/
 - **CPU**: Efficient real-time processing with Web Audio API
 - **Storage**: IndexedDB for persistent audio file caching
 
-## 🔒 Security Considerations
-
-### Content Security Policy (CSP)
-For production deployment, consider implementing the following CSP headers:
-
-```
-Content-Security-Policy:
-  default-src 'self';
-  script-src 'self' 'unsafe-inline' https://esm.sh https://cdn.tailwindcss.com https://cdn.jsdelivr.net;
-  style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://fonts.googleapis.com;
-  font-src 'self' https://fonts.gstatic.com;
-  img-src 'self' data: https:;
-  media-src 'self' blob:;
-  connect-src 'self';
-  object-src 'none';
-  base-uri 'self';
-  form-action 'self';
-```
-
-### CDN Dependencies
-The application uses CDN-hosted dependencies for better performance:
-- **Tailwind CSS**: Loaded from `cdn.tailwindcss.com`
-- **Flag Icons**: Loaded from `cdn.jsdelivr.net`
-- **React**: Loaded from `esm.sh` (fallback)
-
-For offline environments, consider bundling these dependencies locally.
-
-## 🌐 Browser Support
-
-| Browser | Version | Status |
-|---------|---------|--------|
-| Chrome | 90+ | ✅ Full Support |
-| Firefox | 88+ | ✅ Full Support |
-| Safari | 14+ | ✅ Full Support |
-| Edge | 90+ | ✅ Full Support |
-
 ## 📋 Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for detailed version history and feature updates.
+**v1.4.1 (Public Beta)**
+- Initial Public Beta Release
+- Full Desktop Migration
+- Performance Improvements
+
+See [CHANGELOG.md](../../documentazione/changelog/CHANGELOG.md) for detailed version history.
 
 ## 🧪 Testing
 
-Run the comprehensive test suite defined in [ANTI_REGRESSION_TESTS.md](ANTI_REGRESSION_TESTS.md) to ensure all features work correctly.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Development Guidelines
-- Follow TypeScript strict mode
-- Maintain Web Audio API compatibility
-- Test across all supported browsers
-- Update documentation for new features
-- Run anti-regression tests before committing
+This is a **Public Beta** release. Please report any issues on the GitHub repository.
 
 ## 📄 License
 
@@ -276,12 +200,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Development**: AI-assisted development with human oversight
 - **Community**: Open source contributors and beta testers
 
-## 📞 Support
-
-- **Issues**: [GitHub Issues](https://github.com/yourusername/runtime-radio-live-machine/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/runtime-radio-live-machine/discussions)
-- **Documentation**: See [MINI_GUIDE.txt](MINI_GUIDE.txt) for quick reference
-
 ---
 
-**Runtime Radio Live Machine v1.1.0** - Enterprise-grade audio production in your browser. Now with PWA capabilities, MIDI integration, and professional accessibility features.
+**Runtime Radio Live Machine v1.4.1** - Professional Desktop Audio Workstation.
+
